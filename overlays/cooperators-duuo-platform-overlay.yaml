@@ -1,0 +1,59 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Duuo Platform API
+  version: 1.0.0
+extends: openapi/cooperators-duuo-platform-openapi.yml
+x-generated: '2026-07-25'
+x-method: generated
+x-source: >-
+  Enhancements applied by the API Evangelist enrichment pipeline on top of the OpenAPI derived from
+  Duuo's archived published Postman collection. Kept as an overlay so the derived spec stays a clean
+  reflection of what Duuo documented.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: cooperators
+      x-apievangelist-api: cooperators:duuo-platform-api
+      x-apievangelist-access: partner-gated
+      x-apievangelist-self-serve: false
+      x-apievangelist-live-verified: false
+      x-apievangelist-artifacts:
+        authentication: authentication/cooperators-authentication.yml
+        conventions: conventions/cooperators-conventions.yml
+        errors: errors/cooperators-problem-types.yml
+        lifecycle: lifecycle/cooperators-lifecycle.yml
+        sandbox: sandbox/cooperators-sandbox.yml
+        data_model: data-model/cooperators-data-model.yml
+        conformance: conformance/cooperators-conformance.yml
+        agentic_access: agentic-access/cooperators-agentic-access.yml
+        skills: skills/_index.yml
+  - target: $.info
+    update:
+      x-apievangelist-gaps:
+        - No idempotency contract on money- or policy-binding writes.
+        - No webhook or callback surface; bind completion is not observable through the API.
+        - No claims or FNOL operations.
+        - No list/read operations for policies or quote status (both announced, never shipped).
+        - No rate-limit contract published.
+        - Errors are a proprietary envelope, not RFC 9457, and 404 is plain text.
+  - target: $.paths['/api/v1/event/quote/{quoteId}/payment'].post
+    update:
+      x-agentic-consequence: physical
+      x-apievangelist-note: >-
+        Money-moving step. Returns a Duuo-hosted payment redirect and, with bindOnPayment=true,
+        causes a policy to be bound and issued. No idempotency key exists — do not blind-retry.
+  - target: $.paths['/api/v1/tenant/quote/{quoteSubmissionId}/payment'].put
+    update:
+      x-agentic-consequence: physical
+      x-apievangelist-note: >-
+        Money-moving step. Requires four separate consents to already be true. No idempotency key
+        exists — do not blind-retry.
+  - target: $.paths['/api/v1/event/policy'].post
+    update:
+      x-agentic-consequence: physical
+      x-apievangelist-note: Binds a real insurance contract. Only used when bindOnPayment=false.
+  - target: $.paths['/api/v1/tenant/eligibility'].post
+    update:
+      x-apievangelist-note: >-
+        Runs a soft credit check on the consumer. creditScoreConsent and personalInfoConsent must
+        each be captured on their own check box with Duuo's verbatim disclosure text.

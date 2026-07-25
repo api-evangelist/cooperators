@@ -1,0 +1,84 @@
+generated: '2026-07-25'
+method: derived
+status: candidate
+source: openapi/cooperators-duuo-platform-openapi.yml
+published_by_provider: false
+note: >-
+  NOT a provider artifact. Neither The Co-operators nor Duuo publishes an MCP server — none was
+  found in the MCP registry, on npm, or in any Duuo or Co-operators material (searched 2026-07-25).
+  This is a CANDIDATE tool surface derived one-for-one from the operations in the repo's OpenAPI, to
+  show what an agent-facing surface over this API would look like. Nothing here is callable today.
+server:
+  name: duuo-platform
+  transport: http
+  url: null
+  auth: >-
+    Would inherit the API's OAuth 2.0 client_credentials model — partner-issued client id/secret,
+    partner-issued host, 60-minute bearer token.
+agent_cautions:
+  - >-
+    Both flows are strictly ordered; a tool-calling agent that reorders steps will error. Ordering
+    is a hard constraint, not a hint.
+  - >-
+    make_event_payment, create_event_policy and make_tenant_payment bind real insurance contracts
+    and move real money. There is no idempotency key, so a retried call can double-bind.
+  - >-
+    Consent fields are legally load-bearing. An agent must not set personalInfoConsent,
+    creditScoreConsent, thirdPartySharingConsent, paymentAndTermsOfUseConsent, generalConsent or
+    emailConsent to true on a human's behalf without that human having seen Duuo's verbatim
+    disclosure text.
+  - >-
+    check_tenant_eligibility triggers a soft credit check on a real consumer.
+  - >-
+    Any coverage question must be redirected to a licensed insurance representative
+    (info@duuo.ca) — Duuo's compliance guide forbids the integrator answering it.
+tools:
+  - name: create_event_entity
+    description: Create the insured party (entity/customer) for an event insurance quote.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#createEventEntity
+    consequence: write
+  - name: create_event_quote
+    description: Price an event risk and return premium, sales tax and total cost in CAD.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#createEventQuote
+    consequence: write
+  - name: get_event_quote
+    description: Retrieve a previously created event quote for display.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#getEventQuote
+    consequence: read
+  - name: make_event_payment
+    description: Generate the Duuo-hosted payment redirect for an event quote; binds and issues the policy when bindOnPayment is true.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#createEventQuotePayment
+    consequence: physical
+    human_in_the_loop: required
+  - name: create_event_policy
+    description: Bind an event quote into a policy when it is bound outside the payment process.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#createEventPolicy
+    consequence: physical
+    human_in_the_loop: required
+  - name: email_event_policy
+    description: Email the confirmation of insurance for an event policy.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#emailEventPolicy
+    consequence: write
+  - name: check_tenant_eligibility
+    description: Check tenant insurance eligibility and create the initial quote. Runs a soft credit check.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#checkTenantEligibility
+    consequence: write
+    human_in_the_loop: required
+  - name: update_tenant_quote
+    description: Add full risk detail to a tenant quote and return the four priced options.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#updateTenantQuote
+    consequence: write
+  - name: add_tenant_insured
+    description: Record package selection, payment frequency, landlord and additional insureds on a tenant quote.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#addTenantQuoteInsured
+    consequence: write
+  - name: make_tenant_payment
+    description: Generate the Duuo-hosted payment redirect for a tenant quote; binds the policy and emails the certificate on success.
+    source_operation: openapi/cooperators-duuo-platform-openapi.yml#createTenantQuotePayment
+    consequence: physical
+    human_in_the_loop: required
+coverage:
+  rest_operations: 10
+  tools_derived: 10
+  mcp_only: 0
+  rest_only: 0

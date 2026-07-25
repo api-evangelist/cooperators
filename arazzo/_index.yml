@@ -1,0 +1,21 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/cooperators-duuo-platform-openapi.yml
+note: >-
+  Native Arazzo workflows for the Duuo Platform API. Both mirror Duuo's own mandatory call order;
+  every operationId is verified against the repo's OpenAPI.
+workflows:
+  - file: cooperators-event-insurance-quote-and-bind.yml
+    workflowId: duuo-event-quote-and-bind
+    title: Duuo event insurance — quote and bind
+    summary: >-
+      Create the entity, price the event, retrieve the quote for display, then generate the
+      Duuo-hosted payment redirect that binds and emails the policy.
+    operations: [createEventEntity, createEventQuote, getEventQuote, createEventQuotePayment]
+  - file: cooperators-tenant-insurance-quote-and-bind.yml
+    workflowId: duuo-tenant-quote-and-bind
+    title: Duuo tenant insurance — quote and bind
+    summary: >-
+      Check eligibility with consent (soft credit check), add the risk detail and price it into
+      four options, record selection and additional insureds, then redirect to payment.
+    operations: [checkTenantEligibility, updateTenantQuote, addTenantQuoteInsured, createTenantQuotePayment]

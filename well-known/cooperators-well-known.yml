@@ -1,0 +1,43 @@
+generated: '2026-07-25'
+method: probed
+source: live HTTP probes
+result: none
+note: >-
+  No /.well-known/ discovery surface is published on any host in the group. Recorded as evidence —
+  absence is the finding. No WellKnown or SecurityTxt pointer is emitted because no document exists
+  to point at. The Duuo Platform API host is partner-issued and not publicly resolvable, so it could
+  not be probed.
+hosts_probed:
+  - https://www.cooperators.ca
+  - https://duuo.ca
+hosts_unreachable:
+  - {host: 'api.duuo.ca', reason: 'DNS: no A record'}
+  - {host: 'developers.duuo.ca', reason: 'DNS: no A record'}
+  - {host: 'docs.duuo.ca', reason: 'DNS: no A record'}
+  - {host: 'api.cooperators.ca', reason: 'DNS: no A record'}
+  - {host: 'developer.cooperators.ca', reason: 'DNS: no A record'}
+documents:
+  - {host: 'https://www.cooperators.ca', path: /.well-known/security.txt, status: 404}
+  - {host: 'https://www.cooperators.ca', path: /.well-known/openid-configuration, status: 404}
+  - {host: 'https://www.cooperators.ca', path: /.well-known/oauth-authorization-server, status: 404}
+  - {host: 'https://www.cooperators.ca', path: /.well-known/api-catalog, status: 404}
+  - {host: 'https://duuo.ca', path: /.well-known/security.txt, status: 404}
+  - {host: 'https://duuo.ca', path: /.well-known/openid-configuration, status: 404}
+  - {host: 'https://duuo.ca', path: /.well-known/ai-plugin.json, status: 404}
+contract_discovery:
+  note: >-
+    Full STEP 0b contract hunt, 2026-07-25. No live machine-readable contract exists on any
+    resolvable host. The repo's OpenAPI was derived from Duuo's own archived published Postman
+    collection, not fetched live.
+  probes:
+    - {url: 'https://developer.duuo.ca/', status: 404, note: advertised developer portal, Postman-hosted docs domain, unpublished}
+    - {url: 'https://documenter.getpostman.com/view/26639007/2s93sXcubU', status: 404}
+    - {url: 'https://api.duuo.ca/openapi.json', status: 'connection failed (no DNS)'}
+    - {url: 'https://api.duuo.ca/swagger.json', status: 'connection failed (no DNS)'}
+    - {url: 'https://www.cooperators.ca/openapi.json', status: 404}
+    - {url: 'https://www.cooperators.ca/swagger.json', status: 404}
+    - {url: 'https://www.cooperators.ca/api-docs', status: 404}
+    - {url: 'https://duuo.ca/llms.txt', status: 404}
+    - {url: 'https://www.cooperators.ca/llms.txt', status: 404}
+  graphql: {found: false, note: no /graphql surface advertised or discovered on any resolvable host}
+  mcp: {found: false, note: no hosted MCP server published by either brand}

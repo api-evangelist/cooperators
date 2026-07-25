@@ -1,0 +1,161 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/cooperators-duuo-platform-openapi.yml
+docs: https://web.archive.org/web/20240127073206id_/https://developer.duuo.ca/api/collections/26639007/2s93sXcubU
+format: custom-envelope
+note: >-
+  The Duuo Platform API does NOT use RFC 9457 problem+json. It returns a proprietary envelope, and
+  the two products use two different shapes. Event operations return the code at
+  data.resolved.responseCode with the payload at data.resolved.response. Tenant operations return
+  the code at data.resolved.status with the payload at data.resolved.message on success and at
+  data.resolved.responseDetails on failure. Tenant 404 is not JSON at all — it is the plain-text
+  body "Module not found". Derived from Duuo's own published response examples; no error reference
+  page is published beyond the per-operation tables in the collection.
+envelopes:
+  event:
+    code_field: data.resolved.responseCode
+    payload_field: data.resolved.response
+    detail_field: data.resolved.response.responseDetails
+  tenant:
+    code_field: data.resolved.status
+    success_field: data.resolved.message
+    error_field: data.resolved.responseDetails
+    correlation_field: statusReferenceId
+problems:
+  - status: 401
+    title: Access forbidden
+    product: event
+    envelope: event
+    description: >-
+      The bearer token is missing, invalid or not entitled. Duuo tokens expire every 60 minutes and
+      must be refreshed against the partner-issued token endpoint.
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventEntity
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#getEventQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuotePayment
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventPolicy
+      - openapi/cooperators-duuo-platform-openapi.yml#emailEventPolicy
+    remediation: Re-run the client_credentials token call and retry with a fresh bearer token.
+  - status: 440
+    title: Login timeout
+    product: event
+    envelope: event
+    description: >-
+      Non-standard status Duuo documents for an expired session on the event product. Duuo states
+      the token expires every 60 minutes.
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventEntity
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#getEventQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuotePayment
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventPolicy
+      - openapi/cooperators-duuo-platform-openapi.yml#emailEventPolicy
+    remediation: Refresh the token and retry.
+  - status: 500
+    title: Error creating profile
+    product: event
+    envelope: event
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventEntity
+  - status: 500
+    title: Error creating quote
+    product: event
+    envelope: event
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuotePayment
+  - status: 500
+    title: Error getting quote
+    product: event
+    envelope: event
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#getEventQuote
+  - status: 500
+    title: Error getting pre-quote
+    product: event
+    envelope: event
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventQuotePayment
+  - status: 500
+    title: Error retrieving quote / error creating policy
+    product: event
+    envelope: event
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#createEventPolicy
+  - status: 500
+    title: Error sending email
+    product: event
+    envelope: event
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#emailEventPolicy
+  - status: 400
+    title: Bad Request
+    product: tenant
+    envelope: tenant
+    description: >-
+      Field-level validation failure. responseDetails is an ARRAY of objects, each with the
+      offending field, a human message, and a statusReferenceId in the dpTenApiStatus400_* family.
+    example_details:
+      - field: personalInfoConsent
+        message: The personal information consent field is required.
+        statusReferenceId: dpTenApiStatus400_008
+      - field: paymentFrequency
+        message: paymentFrequency is required
+        statusReferenceId: dpTenApiStatus400_002
+      - field: contactInfoPhone
+        message: Invalid Phone Number Format
+        statusReferenceId: dpTenApiStatus400_placeholder
+      - field: bindOnPayment
+        message: The bindOnPayment field is required.
+        statusReferenceId: dpTenApiStatus400
+    remediation: >-
+      Correct the named field. The consent booleans (personalInfoConsent, creditScoreConsent,
+      thirdPartySharingConsent, paymentAndTermsOfUseConsent) are the most common cause — each must
+      be present AND true, and each must have been captured from the user with Duuo's required
+      disclosure text.
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#checkTenantEligibility
+      - openapi/cooperators-duuo-platform-openapi.yml#updateTenantQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#addTenantQuoteInsured
+      - openapi/cooperators-duuo-platform-openapi.yml#createTenantQuotePayment
+  - status: 403
+    title: Access Denied - Requires Access Mgmt
+    product: tenant
+    envelope: tenant
+    description: >-
+      The partner credential is not entitled to the module. responseDetails is the plain string
+      "Access denied."
+    remediation: Contact your Duuo Partner Account Manager to have the module entitled.
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#checkTenantEligibility
+      - openapi/cooperators-duuo-platform-openapi.yml#updateTenantQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#addTenantQuoteInsured
+      - openapi/cooperators-duuo-platform-openapi.yml#createTenantQuotePayment
+  - status: 404
+    title: Route/Module Not Found
+    product: tenant
+    envelope: none
+    content_type: text/plain
+    body: Module not found
+    description: >-
+      Returned as a bare text body, not JSON. Clients must not assume a JSON body on 404.
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#checkTenantEligibility
+      - openapi/cooperators-duuo-platform-openapi.yml#updateTenantQuote
+      - openapi/cooperators-duuo-platform-openapi.yml#addTenantQuoteInsured
+      - openapi/cooperators-duuo-platform-openapi.yml#createTenantQuotePayment
+  - status: 422
+    title: Unprocessable Entity
+    product: tenant
+    envelope: tenant
+    description: >-
+      The request was well formed but could not be processed. Documented on Update Quote only.
+    source_operations:
+      - openapi/cooperators-duuo-platform-openapi.yml#updateTenantQuote
+ordering_errors:
+  note: >-
+    Duuo documents both product flows as strictly ordered and states that "failure to follow the
+    specified order of API's for this product will result in error". Out-of-order calls are a real
+    error class with no dedicated code — they surface as 400/422/500 on the operation that was
+    called too early.

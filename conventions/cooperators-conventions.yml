@@ -1,0 +1,113 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/cooperators-duuo-platform-openapi.yml
+docs: https://web.archive.org/web/20240127073206id_/https://developer.duuo.ca/api/collections/26639007/2s93sXcubU
+api: Duuo Platform API
+note: >-
+  Cross-cutting request/response semantics for the Duuo Platform API, derived from Duuo's own
+  published developer-portal collection. Only conventions Duuo actually documents are recorded;
+  absences below are real absences, not gaps in the harvest.
+authentication:
+  style: oauth2-client-credentials + bearer
+  token_request: >-
+    POST grant_type=client_credentials (JSON body) to the partner-issued token URL, with an
+    Authorization header of "Basic " + Base64Encoded(client_id + ":" + client_secret).
+  call_header: 'Authorization: Bearer {access_token}'
+  token_lifetime_seconds: 3600
+  token_refresh: >-
+    Duuo states the token expires every 60 minutes and should therefore be refreshed. Expiry
+    surfaces as 401 Access forbidden or the non-standard 440 Login timeout on the event product.
+  artifact: authentication/cooperators-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key, no retry-safety contract and no de-duplication guarantee is documented
+    anywhere in Duuo's published collection. This matters — createEventQuotePayment,
+    createEventPolicy and createTenantQuotePayment are money- and policy-binding writes with no
+    published replay protection, and the flow is strictly ordered, so a retried step can produce a
+    duplicate entity, quote or policy. Partners should key on the returned quoteId /
+    quoteSubmissionId / policyId themselves. NOT scored as idempotency support.
+ordering:
+  enforced: true
+  note: >-
+    Both products are strictly ordered and Duuo warns that out-of-order calls will error.
+  event_sequence:
+    - createEventEntity
+    - createEventQuote
+    - getEventQuote
+    - createEventQuotePayment
+    - createEventPolicy    # only when bindOnPayment=false
+    - emailEventPolicy     # only when bindOnPayment=false
+  tenant_sequence:
+    - checkTenantEligibility
+    - updateTenantQuote
+    - addTenantQuoteInsured
+    - createTenantQuotePayment
+pagination:
+  supported: false
+  note: No collection/list operation is published, so no pagination contract exists.
+filtering:
+  supported: false
+expansion:
+  supported: false
+metadata:
+  supported: false
+  note: >-
+    A metadata object is echoed in every response envelope but Duuo does not document it as a
+    partner-writable field.
+request_tracing:
+  header: null
+  response_field: statusReferenceId
+  note: >-
+    Tenant operations return a statusReferenceId on both success (dpTenApiStatus200_001) and
+    failure (dpTenApiStatus400_008 and siblings). It is the closest thing to a correlation id the
+    API publishes; there is no request-id request header. Event operations return no correlation
+    id at all.
+versioning:
+  scheme: uri-path
+  current: v1
+  path_prefix: /api/v1
+  header: null
+  note: >-
+    Version is carried in the path (/api/v1/event/*, /api/v1/tenant/*). No version header, no
+    dated-version train, and no published version-negotiation policy.
+  artifact: lifecycle/cooperators-lifecycle.yml
+error_envelope:
+  format: custom-envelope
+  rfc9457: false
+  event: {code: data.resolved.responseCode, payload: data.resolved.response}
+  tenant: {code: data.resolved.status, success: data.resolved.message, error: data.resolved.responseDetails}
+  gotcha: >-
+    Tenant 404 returns the plain-text body "Module not found", not JSON. Tenant 400 returns
+    responseDetails as an ARRAY of field errors, while 403 and 422 return it as a STRING — clients
+    must type-check before parsing.
+  artifact: errors/cooperators-problem-types.yml
+rate_limiting:
+  documented: false
+  headers: []
+  note: No rate limit, quota or throttling contract is published.
+webhooks:
+  supported: false
+  note: >-
+    No callback, webhook or event surface. Policy issue and certificate-of-insurance delivery are
+    handled by Duuo out of band (email to the customer) rather than by a partner callback, so a
+    partner cannot observe bind completion through the API; the payment redirect is one-way.
+consent_as_contract:
+  note: >-
+    The defining convention of this API. Consent booleans are load-bearing request fields that gate
+    the call, not UI decoration — personalInfoConsent and creditScoreConsent (checkTenantEligibility),
+    thirdPartySharingConsent (addTenantQuoteInsured), paymentAndTermsOfUseConsent
+    (createTenantQuotePayment), generalConsent and emailConsent (createEventQuotePayment) must each
+    be true or the call fails with 400. Duuo further requires each consent be captured on its own
+    check box with its published verbatim disclosure text, requires an excluded-activities
+    acknowledgement before an event quote proceeds, requires Duuo attribution, logo and a
+    licensed-representative support redirect on every screen where coverage is discussed, and
+    requires a compliance review of the integration before go-live. Non-compliance is grounds for
+    access termination.
+money:
+  currency: CAD
+  note: >-
+    Premium, salesTax and totalCost are returned in Canadian dollars. Payment itself is never taken
+    through the API — both products return a Duuo-hosted payment page URL and the customer is
+    redirected, so the partner never touches card data.

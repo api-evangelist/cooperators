@@ -50,7 +50,13 @@ apis:
     tenant insurance (check eligibility, update quote, add insured, make payment) — with no claims or
     FNOL surface. The developer portal Duuo links to from duuo.ca, https://developer.duuo.ca/, is a
     Postman-hosted documentation domain that returned HTTP 404 on 2026-07-25; the collection it published
-    has been unpublished, so no live public reference remains.
+    has been unpublished, so no live public reference remains. The OpenAPI 3.1 in this repo is a
+    derivation by API Evangelist from an Internet Archive capture of that same Duuo-published Postman
+    collection — ten operations across two strictly ordered product flows, with Duuo's own request and
+    response examples, error shapes and Partner Accepted Testing values carried through. It is a
+    historical, non-live-verified reconstruction, not a provider-published spec. Consent booleans are
+    load-bearing request fields on both flows, there is no idempotency key on the money- and
+    policy-binding writes, and no webhook, claims, policy-read or quote-status operation exists.
   humanURL: https://duuo.ca/embedded-partners/
   tags:
   - Embedded Insurance
@@ -66,7 +72,59 @@ apis:
     url: https://duuo.ca/
   - type: SignUp
     url: https://duuo.ca/new-partners/
+  - type: GettingStarted
+    url: https://duuo.ca/embedded-partners/
+    name: Duuo partner onboarding — discovery, agreement, credentials, build, test, compliance review, go live
+  - type: Support
+    url: https://intercom.help/duuo-support/en/
+    name: Duuo help centre
+  - type: TermsOfService
+    url: https://duuo.ca/terms-of-use
+  - type: PrivacyPolicy
+    url: https://duuo.ca/privacy
+  - type: Blog
+    url: https://duuo.ca/blog/
+  - type: OpenAPI
+    url: openapi/cooperators-duuo-platform-openapi.yml
+    name: Duuo Platform API (OpenAPI 3.1, derived from Duuo's archived published Postman collection — not live-verified)
+  - type: Overlay
+    url: overlays/cooperators-duuo-platform-overlay.yaml
+  - type: Authentication
+    url: authentication/cooperators-authentication.yml
+  - type: Conventions
+    url: conventions/cooperators-conventions.yml
+  - type: ErrorCatalog
+    url: errors/cooperators-problem-types.yml
+  - type: DataModel
+    url: data-model/cooperators-data-model.yml
+  - type: Sandbox
+    url: sandbox/cooperators-sandbox.yml
+    name: Partner Accepted Testing (PAT) environment and published test cards — credentials issued by a Partner Account Manager, not self-serve
+  - type: Lifecycle
+    url: lifecycle/cooperators-lifecycle.yml
+  - type: Conformance
+    url: conformance/cooperators-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/cooperators-agentic-access.yml
+  - type: MCPServer
+    url: mcp/cooperators-mcp.yml
+    name: Duuo Platform MCP tool surface (CANDIDATE — derived from the OpenAPI, NOT published or hosted by the provider)
+  - type: AgentSkill
+    url: skills/_index.yml
+    name: Agent skills for the two Duuo quote-and-bind flows
+  - type: Arazzo
+    url: arazzo/cooperators-event-insurance-quote-and-bind.yml
+    name: Duuo event insurance — quote and bind
+  - type: Arazzo
+    url: arazzo/cooperators-tenant-insurance-quote-and-bind.yml
+    name: Duuo tenant insurance — quote and bind
 common:
+- type: AgenticAccess
+  url: agentic-access/cooperators-agentic-access.yml
+- type: Authentication
+  url: authentication/cooperators-authentication.yml
+- type: DomainSecurity
+  url: security/cooperators-domain-security.yml
 - type: Website
   url: https://www.cooperators.ca/
 - type: About
@@ -79,6 +137,41 @@ common:
   url: https://www.cooperators.ca/en/security-privacy
 - type: LinkedIn
   url: https://www.linkedin.com/company/co-operators
+- type: TermsOfService
+  url: https://www.cooperators.ca/en/security-privacy/legal
+- type: PrivacyPolicy
+  url: https://www.cooperators.ca/en/security-privacy/privacy-policy
+- type: Support
+  url: https://www.cooperators.ca/en/contact-us
+- type: News
+  url: https://www.cooperators.ca/en/about-us/newsroom
+- type: Blog
+  url: https://duuo.ca/blog/
+  name: Duuo blog (the group's only public developer-adjacent publishing surface)
+- type: Careers
+  url: https://www.cooperators.ca/en/about-us/careers
+- type: Sustainability
+  url: https://www.cooperators.ca/en/about-us/sustainability
+- type: CodeOfConduct
+  url: https://www.cooperators.ca/en/about-us/code-of-ethics-business-conduct
+- type: Accessibility
+  url: https://www.cooperators.ca/en/client-resources/accessibility-plan-details
+- type: LLMsTxt
+  url: llms/cooperators-llms.txt
+- type: Conventions
+  url: conventions/cooperators-conventions.yml
+- type: ErrorCatalog
+  url: errors/cooperators-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/cooperators-lifecycle.yml
+- type: Conformance
+  url: conformance/cooperators-conformance.yml
+- type: DataModel
+  url: data-model/cooperators-data-model.yml
+- type: Sandbox
+  url: sandbox/cooperators-sandbox.yml
+- type: AgentSkill
+  url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

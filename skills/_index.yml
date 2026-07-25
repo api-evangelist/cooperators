@@ -1,0 +1,16 @@
+generated: '2026-07-25'
+method: generated
+source: openapi/cooperators-duuo-platform-openapi.yml
+note: >-
+  Packaged operating instructions for the two marquee Duuo Platform API flows, grounded in the
+  operationIds of the repo's OpenAPI. Duuo publishes no AGENTS.md or skill files of its own
+  (searched 2026-07-25).
+skills:
+  - file: cooperators-event-insurance-quote-and-bind.md
+    name: Quote and bind Duuo event insurance
+    api: openapi/cooperators-duuo-platform-openapi.yml
+    operations: [createEventEntity, createEventQuote, getEventQuote, createEventQuotePayment, createEventPolicy, emailEventPolicy]
+  - file: cooperators-tenant-insurance-quote-and-bind.md
+    name: Quote and bind Duuo tenant insurance
+    api: openapi/cooperators-duuo-platform-openapi.yml
+    operations: [checkTenantEligibility, updateTenantQuote, addTenantQuoteInsured, createTenantQuotePayment]

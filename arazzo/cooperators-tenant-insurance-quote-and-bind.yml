@@ -1,0 +1,157 @@
+arazzo: 1.0.1
+info:
+  title: Duuo tenant insurance — quote and bind
+  version: 1.0.0
+  description: >-
+    The full Duuo tenant (renters) insurance partner flow in Duuo's mandatory order: check
+    eligibility with consent, add the risk detail and price it into four options, record the
+    selection and any additional insureds, then generate the Duuo-hosted payment redirect that
+    binds the policy. Seed inputs from sandbox/cooperators-sandbox.yml (Partner Accepted Testing).
+sourceDescriptions:
+  - name: duuo
+    url: ../openapi/cooperators-duuo-platform-openapi.yml
+    type: openapi
+workflows:
+  - workflowId: duuo-tenant-quote-and-bind
+    summary: Check eligibility, price the risk, add insureds, and redirect to payment.
+    description: >-
+      Duuo states the tenant operations must be executed in this order or they will error.
+      Eligibility runs a soft credit check on a real consumer, and the payment step moves money and
+      binds a policy with no idempotency key — neither may be retried blindly. Every consent flag
+      below must have been captured from the customer with Duuo's verbatim disclosure text.
+    inputs:
+      type: object
+      required: [contactInfoEmail, insuredAddressPostalCode, insuredAddressProvince, policyEffectiveDate]
+      properties:
+        contactInfoEmail: {type: string, format: email}
+        contactInfoFirstName: {type: string}
+        contactInfoLastName: {type: string}
+        contactInfoDOB: {type: string, format: date}
+        contactInfoPhone: {type: string}
+        insuredAddressProvince: {type: string, enum: [AB, BC, MB, NB, NS, ON, PE, SK]}
+        insuredAddressPostalCode: {type: string, description: '"LNL NLN" format.'}
+        insuredAddressUnit: {type: string}
+        insuredAddressStreet: {type: string}
+        insuredAddressCity: {type: string}
+        insuredAddressCountry: {type: string}
+        insuredBuildingType: {type: string}
+        claimsPriorHistory: {type: boolean}
+        monitoredSecuritySystem: {type: boolean}
+        monitoredFireDetectionSystem: {type: boolean}
+        monitoredWaterLeakDetectionSystem: {type: boolean}
+        policyEffectiveDate: {type: string, format: date, description: Tomorrow up to 30 days out; never today.}
+        personalContentCoverageLimit: {type: string, enum: ['10000', '25000', '50000', '75000', '100000', '150000']}
+        liabilityCoverageLimit: {type: string, enum: ['1000000', '2000000']}
+        deductibleLimit: {type: string, enum: ['1000', '2000', '3000', '5000']}
+        packageSelection: {type: string, enum: [premium, standard]}
+        paymentFrequency: {type: string, enum: [monthly, annually]}
+        landlordFirstName: {type: string}
+        landlordLastName: {type: string}
+        landlordEmailAddress: {type: string, format: email}
+    steps:
+      - stepId: check-eligibility
+        description: >-
+          Confirm eligibility and create the initial quote. Runs a soft credit check;
+          personalInfoConsent and creditScoreConsent must each have been captured on their own
+          check box with Duuo's required text.
+        operationId: checkTenantEligibility
+        requestBody:
+          contentType: application/json
+          payload:
+            personalInfoConsent: true
+            creditScoreConsent: true
+            insuredAddressProvince: $inputs.insuredAddressProvince
+            contactInfoEmail: $inputs.contactInfoEmail
+            languageLocal: en_US
+            insuredAddressPostalCode: $inputs.insuredAddressPostalCode
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          quoteId: $response.body#/data/resolved/message/quoteId
+          quoteSubmissionId: $response.body#/data/resolved/message/quoteSubmissionId
+          quoteExpirationDate: $response.body#/data/resolved/message/quoteExpirationDate
+      - stepId: update-quote
+        description: >-
+          Add the full risk detail and price it. Returns the four options (standard/enhanced,
+          monthly/annual). All four must be displayed with coverage limits and policy wordings.
+        operationId: updateTenantQuote
+        parameters:
+          - name: quoteSubmissionId
+            in: path
+            value: $steps.check-eligibility.outputs.quoteSubmissionId
+        requestBody:
+          contentType: application/json
+          payload:
+            insuredAddressUnit: $inputs.insuredAddressUnit
+            insuredAddressCity: $inputs.insuredAddressCity
+            insuredAddressCountry: $inputs.insuredAddressCountry
+            insuredAddressStreet: $inputs.insuredAddressStreet
+            insuredAddressPostalCode: $inputs.insuredAddressPostalCode
+            insuredBuildingType: $inputs.insuredBuildingType
+            contactInfoFirstName: $inputs.contactInfoFirstName
+            contactInfoLastName: $inputs.contactInfoLastName
+            contactInfoDOB: $inputs.contactInfoDOB
+            contactInfoEmail: $inputs.contactInfoEmail
+            contactInfoPhone: $inputs.contactInfoPhone
+            claimsPriorHistory: $inputs.claimsPriorHistory
+            monitoredSecuritySystem: $inputs.monitoredSecuritySystem
+            monitoredFireDetectionSystem: $inputs.monitoredFireDetectionSystem
+            monitoredWaterLeakDetectionSystem: $inputs.monitoredWaterLeakDetectionSystem
+            policyEffectiveDate: $inputs.policyEffectiveDate
+            personalContentCoverageLimit: $inputs.personalContentCoverageLimit
+            liabilityCoverageLimit: $inputs.liabilityCoverageLimit
+            deductibleLimit: $inputs.deductibleLimit
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          standardYearly: $response.body#/data/resolved/message/heChargedPremTotalStandardYearly
+          premiumYearly: $response.body#/data/resolved/message/heChargedPremTotalPremiumYearly
+          standardMonthly: $response.body#/data/resolved/message/heChargedPremTotalStandardMonthly
+          premiumMonthly: $response.body#/data/resolved/message/heChargedPremTotalPremiumMonthly
+      - stepId: add-insured
+        description: >-
+          Record the customer's package and payment-frequency selection plus any landlord and
+          additional insureds. thirdPartySharingConsent must have been captured with Duuo's
+          verbatim check-box text.
+        operationId: addTenantQuoteInsured
+        parameters:
+          - name: quoteSubmissionId
+            in: path
+            value: $steps.check-eligibility.outputs.quoteSubmissionId
+        requestBody:
+          contentType: application/json
+          payload:
+            packageSelection: $inputs.packageSelection
+            paymentFrequency: $inputs.paymentFrequency
+            paymentMethod: credit
+            languageLocal: en_US
+            landlordFirstName: $inputs.landlordFirstName
+            landlordLastName: $inputs.landlordLastName
+            landlordEmailAddress: $inputs.landlordEmailAddress
+            thirdPartySharingConsent: true
+        successCriteria:
+          - condition: $statusCode == 200
+      - stepId: make-payment
+        description: >-
+          Generate the Duuo-hosted payment redirect. Succeeds only when all four consents are true.
+          On successful payment the policy binds and the certificate of insurance is emailed.
+          Money-moving and policy-binding; not idempotent.
+        operationId: createTenantQuotePayment
+        parameters:
+          - name: quoteSubmissionId
+            in: path
+            value: $steps.check-eligibility.outputs.quoteSubmissionId
+        requestBody:
+          contentType: application/json
+          payload:
+            bindOnPayment: true
+            paymentAndTermsOfUseConsent: true
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          paymentUrl: $response.body#/data/resolved/message/url
+          statusReferenceId: $response.body#/data/resolved/message/statusReferenceId
+    outputs:
+      quoteId: $steps.check-eligibility.outputs.quoteId
+      quoteSubmissionId: $steps.check-eligibility.outputs.quoteSubmissionId
+      paymentUrl: $steps.make-payment.outputs.paymentUrl

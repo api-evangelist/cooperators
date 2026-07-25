@@ -1,0 +1,66 @@
+generated: '2026-07-25'
+method: searched
+source: openapi/cooperators-duuo-platform-openapi.yml
+docs: https://web.archive.org/web/20240127073206id_/https://developer.duuo.ca/api/collections/26639007/2s93sXcubU
+docs_note: >-
+  Duuo's own published Authorization documentation, retrieved from the Internet Archive capture of
+  its developer-portal Postman collection. The live portal (https://developer.duuo.ca/) returns 404
+  as of 2026-07-25. Co-operators' own advisor/broker surface is sign-in walls only and documents no
+  API authentication at all.
+token_flow:
+  protocol: OAuth 2.0
+  grant_type: client_credentials
+  token_endpoint: partner-issued (no public token URL is published)
+  client_authentication: >-
+    HTTP Basic — 'Authorization: Basic ' + Base64Encoded("client_id" + ":" + "client_secret")
+  request_body: '{"grant_type":"client_credentials"}'
+  response_fields: [access_token, expires_in, token_type]
+  token_type: Bearer
+  expires_in: 3600
+  refresh: >-
+    Duuo states the token expires every 60 minutes and should therefore be refreshed. There is no
+    refresh_token in a client_credentials flow — re-run the token call.
+  call_header: 'Authorization: Bearer {access_token}'
+credential_issuance:
+  self_serve: false
+  process: >-
+    Discovery call with the Duuo partnerships team, signed partnership agreement, assigned Partner
+    Account Manager, then issued API access credentials and a partner-specific host. A compliance
+    review of the implementation is required before go-live.
+  signup: https://duuo.ca/new-partners/
+authorization_model:
+  scopes: none published
+  enforcement: >-
+    Per-partner entitlement enforced server-side. An unentitled call returns 403 "Access Denied -
+    Requires Access Mgmt" with responseDetails "Access denied."
+  mtls: false
+  ip_allowlist: not documented
+discovery:
+  openid_configuration: 404 on cooperators.ca and duuo.ca (probed 2026-07-25)
+  oauth_authorization_server: 404 on cooperators.ca (probed 2026-07-25)
+summary:
+  types:
+  - http
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: duuoBearer
+  type: http
+  scheme: bearer
+  description: Bearer token obtained from the partner-issued OAuth 2.0 token endpoint. The token
+    expires every 60 minutes and must be refreshed.
+  sources:
+  - openapi/cooperators-duuo-platform-openapi.yml
+- name: duuoOAuth2
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://your-partner-token-host/oauth/token
+    scopes: 0
+  description: OAuth 2.0 client credentials grant. POST grant_type=client_credentials to the
+    token URL supplied by the Duuo partnerships team, with an HTTP Basic Authorization header
+    of "Basic " + Base64("client_id" + ":" + "client_secret"). No scopes are published. The
+    token URL is partner-issued and is not a public endpoint, so the tokenUrl below is a placeholder.
+  sources:
+  - openapi/cooperators-duuo-platform-openapi.yml

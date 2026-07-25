@@ -1,0 +1,50 @@
+generated: '2026-07-25'
+method: searched
+source: https://web.archive.org/web/20240127073206id_/https://developer.duuo.ca/api/collections/26639007/2s93sXcubU
+api: Duuo Platform API
+self_serve: false
+note: >-
+  Duuo runs a partner testing environment, but it is not self-serve — there is no sandbox signup,
+  no test-key generator and no public console. Credentials for it are issued by a Partner Account
+  Manager after a signed partnership agreement, and Duuo's documented onboarding puts a Test phase
+  (full connectivity, load test, performance test) and a compliance Review phase between Build and
+  Go Live. Values below are published verbatim by Duuo; none were invented.
+environment:
+  name: Partner Accepted Testing
+  abbreviation: PAT
+  aliases: [sandbox]
+  separation: >-
+    Separate partner-issued host and credentials, not a key prefix. Duuo supplies the base URL and
+    the OAuth client id/secret per partner and per environment; there is no test/live mode flag in
+    the request.
+  caveat: >-
+    Duuo explicitly warns on both products that prices returned in PAT are TEST VALUES ONLY and do
+    not represent real-time cost — for event insurance on Get Quote, and for the Standard and
+    Enhanced tenant tiers on Update Quote. Do not display PAT prices to real users.
+test_cards:
+  note: >-
+    Published by Duuo on both Make Payment operations. Card entry happens on the Duuo-hosted
+    payment page after redirect, not in the partner's own form.
+  cards:
+    - brand: Visa
+      number: '4030000010001234'
+      cvv: '123'
+      expiry: Any date in the future
+    - brand: Mastercard
+      number: '5100000010001004'
+      cvv: '123'
+      expiry: Any date in the future
+test_clocks:
+  supported: false
+fixtures:
+  supported: false
+  note: No fixture, trigger or simulation tooling is published.
+decline_simulation:
+  supported: false
+  note: No decline-code or failed-payment simulation values are published.
+constraints_that_shape_test_data:
+  - policyEffectiveDate (tenant) must be today+1 up to a maximum of 30 days out, and cannot be today.
+  - Postal codes must match the Canadian "LNL NLN" format, for example "A1A 1A1".
+  - Event insurance is written in AB, BC, MB, NB, NL, NS, ON, PE, SK; tenant insurance in AB, BC, MB, NB, NS, ON, PE, SK.
+  - singleEvent runs 1-7 days; multipleEvent runs 2-75 days.
+  - An event of 25 days or longer cannot be insured with alcohol served, and no sporting event can be insured with alcohol served.

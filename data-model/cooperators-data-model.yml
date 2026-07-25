@@ -1,0 +1,166 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/cooperators-duuo-platform-openapi.yml
+api: Duuo Platform API
+note: >-
+  Entity-relationship graph derived from the request/response fields and path parameters of the
+  Duuo Platform API. Two parallel product graphs share a shape (party -> quote -> payment -> policy)
+  but do not share identifiers or operations.
+entities:
+  - name: Entity
+    aka: [Customer, Owner]
+    product: event
+    id_field: submissionIdEntity
+    created_by: createEventEntity
+    description: >-
+      The insured party on the event side. Created from partner-held identity data before any quote
+      exists. Duuo de-duplicates — if the user already has a Duuo account they are moved on.
+    fields: [firstName, lastName, name, email, province, phone, language]
+  - name: EventQuote
+    product: event
+    id_field: quoteId
+    id_example: 6467cf740951dac053e71af1
+    created_by: createEventQuote
+    read_by: getEventQuote
+    description: >-
+      A priced event risk. Carries premium, salesTax and totalCost in CAD plus the full event
+      detail needed to bind later. Linked to the entity by entityEmail on create and by
+      submissionIdEntity on read.
+    fields: [premium, salesTax, totalCost, eventTypeLabel, eventSingleOrMultiple, eventStartDate, eventEndDate, eventProvince, eventInsurance, dayFactor, numberAttendees, eventAlcoholServed, effectiveDate, expirationDate]
+  - name: EventAddress
+    product: event
+    description: Venue and address of the event, including the certificate-of-insurance recipient.
+    fields: [eventAddress, venueName, venueAddress, venueCity, venuePostalCode, coiRecipient]
+  - name: EventCoHost
+    product: event
+    fields: [cohostNameOrEntity, cohostEmail]
+  - name: EventAdditionalInsured
+    product: event
+    fields: [additionalInsuredNameOrEntity, additionalInsuredEmail]
+  - name: EventPayment
+    product: event
+    created_by: createEventQuotePayment
+    description: >-
+      Not a stored object the partner can read back — the call returns a Duuo-hosted payment page
+      URL. When bindOnPayment is true the policy is created and emailed on successful payment.
+    fields: [url, bindOnPayment, generalConsent, emailConsent]
+  - name: EventPolicy
+    product: event
+    id_field: policyId
+    id_example: 645a7535e27d0a35d355a19b6
+    business_key: policyNumber
+    business_key_example: Zf-000186
+    created_by: createEventPolicy
+    description: >-
+      Duuo distinguishes two identifiers: policyId is internal, used for process mapping and for
+      the email path parameter; policyNumber is the customer-facing number. Do not show policyId to
+      customers.
+  - name: TenantQuote
+    product: tenant
+    id_field: quoteSubmissionId
+    id_example: 64cab1966825d1f3bc64bb18
+    business_key: quoteId
+    business_key_prefix: TQ-
+    business_key_example: TQ-1000459
+    created_by: checkTenantEligibility
+    updated_by: [updateTenantQuote, addTenantQuoteInsured, createTenantQuotePayment]
+    description: >-
+      Created as a side effect of the eligibility check. Two ids again — the human-readable
+      TQ-prefixed quoteId, and the quoteSubmissionId that every subsequent path parameter uses.
+      Priced into four options (standard/enhanced x monthly/annual) by updateTenantQuote.
+    fields: [quoteStartDate, quoteExpirationDate, ruleIdSelectionDate, heChargedPremTotalStandard, heChargedPremTotalPremium, heChargedPremTotalStandardYearly, heChargedPremTotalPremiumYearly, heChargedPremTotalStandardMonthly, heChargedPremTotalPremiumMonthly]
+  - name: TenantInsuredAddress
+    product: tenant
+    description: >-
+      The risk location. Distinct from the policy holder's current address and from the mailing
+      address — the API models all three separately.
+    fields: [insuredAddressUnit, insuredAddressStreet, insuredAddressCity, insuredAddressProvince, insuredAddressCountry, insuredAddressPostalCode, insuredBuildingType]
+  - name: TenantContact
+    product: tenant
+    fields: [contactInfoFirstName, contactInfoLastName, contactInfoDOB, contactInfoEmail, contactInfoPhone]
+  - name: TenantCoverageSelection
+    product: tenant
+    created_by: addTenantQuoteInsured
+    fields: [packageSelection, paymentFrequency, paymentMethod, personalContentCoverageLimit, liabilityCoverageLimit, deductibleLimit, policyEffectiveDate]
+  - name: TenantAdditionalInsured
+    product: tenant
+    description: >-
+      Modelled as flat positional fields (first/second/third) rather than an array — a partner can
+      add at most three additional insureds plus a landlord.
+    fields: [firstAdditionalInsuredFirstName, firstAdditionalInsuredLastName, secondAdditionalInsuredFirstName, secondAdditionalInsuredLastName, thirdAdditionalInsuredFirstName, thirdAdditionalInsuredLastName]
+  - name: Landlord
+    product: tenant
+    description: The third party the certificate of insurance is shared with, gated on thirdPartySharingConsent.
+    fields: [landlordFirstName, landlordLastName, landlordEmailAddress]
+  - name: Consent
+    product: both
+    description: >-
+      Not a resource, but a first-class gating value carried on the request. Every consent must be
+      true or the call fails.
+    fields: [personalInfoConsent, creditScoreConsent, thirdPartySharingConsent, paymentAndTermsOfUseConsent, generalConsent, emailConsent]
+  - name: StatusReference
+    product: tenant
+    id_field: statusReferenceId
+    id_examples: [dpTenApiStatus200_001, dpTenApiStatus400_008, dpTenApiStatus400_002]
+    description: Correlation id returned on tenant success and failure alike.
+relationships:
+  - from: EventQuote
+    to: Entity
+    kind: belongs_to
+    via: entityEmail / submissionIdEntity
+  - from: EventQuote
+    to: EventAddress
+    kind: has_many
+    via: address[]
+  - from: EventQuote
+    to: EventCoHost
+    kind: has_many
+    via: coHostDetails[]
+  - from: EventQuote
+    to: EventAdditionalInsured
+    kind: has_many
+    via: additionalInsuredDetails[]
+  - from: EventPayment
+    to: EventQuote
+    kind: belongs_to
+    via: quoteId (path)
+  - from: EventPolicy
+    to: EventQuote
+    kind: belongs_to
+    via: quoteId (body)
+  - from: TenantQuote
+    to: TenantInsuredAddress
+    kind: has_one
+    via: insuredAddress* fields
+  - from: TenantQuote
+    to: TenantContact
+    kind: has_one
+    via: contactInfo* fields
+  - from: TenantQuote
+    to: TenantCoverageSelection
+    kind: has_one
+    via: addTenantQuoteInsured / updateTenantQuote
+  - from: TenantQuote
+    to: TenantAdditionalInsured
+    kind: has_many
+    via: first/second/third AdditionalInsured* fields (max 3)
+  - from: TenantQuote
+    to: Landlord
+    kind: has_one
+    via: landlord* fields
+  - from: TenantQuote
+    to: StatusReference
+    kind: has_one
+    via: statusReferenceId
+id_conventions:
+  - {entity: EventQuote, field: quoteId, shape: 24-char hex object id}
+  - {entity: EventPolicy, field: policyId, shape: hex object id, visibility: internal}
+  - {entity: EventPolicy, field: policyNumber, shape: 'Zf-NNNNNN', visibility: customer-facing}
+  - {entity: TenantQuote, field: quoteSubmissionId, shape: 24-char hex object id, usage: path parameter}
+  - {entity: TenantQuote, field: quoteId, shape: 'TQ-NNNNNNN', visibility: customer-facing}
+  - {entity: StatusReference, field: statusReferenceId, shape: 'dpTenApiStatus<code>_<seq>'}
+not_modelled:
+  - Claims / FNOL — no claims surface exists anywhere in the Duuo or Co-operators public API.
+  - Policy lifecycle after issue — no renewal, endorsement, cancellation or policy-read operation.
+  - Get Quote Status and Get Policies — Duuo documented both as "to be released at a later date"; neither shipped publicly.
+  - Card / payment instrument — never touched by the API; the customer is redirected to a Duuo-hosted payment page.

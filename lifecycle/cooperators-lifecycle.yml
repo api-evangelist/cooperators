@@ -1,0 +1,81 @@
+generated: '2026-07-25'
+method: searched
+source: https://duuo.ca/embedded-partners/
+probed: '2026-07-25'
+api: Duuo Platform API
+versioning:
+  scheme: uri-path
+  current: v1
+  path_prefix: /api/v1
+  policy_url: null
+  note: No published version policy, deprecation window or version-negotiation contract.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation header support, and no deprecation policy page. No operation
+    in the derived spec is marked deprecated.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: null
+  probes:
+    - {url: 'https://status.cooperators.ca', status: 'DNS: no A record (connection failed)'}
+    - {url: 'https://status.duuo.ca', status: 'DNS: no A record (connection failed)'}
+  note: >-
+    No status page exists for either brand. Partners have no public health signal; incident
+    communication runs through the assigned Partner Account Manager.
+support:
+  model: named Partner Account Manager
+  channels:
+    - {type: PartnerAccountManager, note: assigned at onboarding, primary technical and commercial channel}
+    - {type: Email, url: 'mailto:info@duuo.ca', note: Duuo customer support; the required redirect for any coverage question}
+    - {type: HelpCenter, url: 'https://intercom.help/duuo-support/en/'}
+    - {type: Form, url: 'https://duuo.ca/new-partners/', note: partner enquiry}
+onboarding:
+  self_serve: false
+  documented_stages: [Discovery, Onboard, Build, Test, Review, Go Live, Ongoing]
+  note: >-
+    Duuo's own published sequence — discovery call with the partnerships team, signed partnership
+    agreement, assigned Partner Account Manager, issued API access credentials, build against
+    product documentation, connectivity/load/performance test, mandatory compliance review of the
+    implementation, then go live, with ongoing PAM reporting. "More detailed API reference
+    documentation" is delivered during onboarding, not published.
+surface_events:
+  - date: '2023-04-05'
+    event: Earliest Internet Archive capture of developer.duuo.ca (HTTP 301).
+  - date: '2024-01-27'
+    event: >-
+      Archive capture of the published "Developer Portal" Postman collection (id 26639007, publish
+      id 2s93sXcubU) documenting the event and tenant surfaces. This is the source the repo's
+      OpenAPI was derived from.
+  - date: '2026-02-06'
+    event: Last archived snapshot in which the portal was still live.
+  - date: '2026-07-25'
+    event: >-
+      developer.duuo.ca returns HTTP 404 (Postman public-hosted docs domain, CNAME phs.getpostman.com);
+      the underlying documenter URL documenter.getpostman.com/view/26639007/2s93sXcubU also 404s.
+      Duuo's marketing pages still link to the dead portal. No public API reference remains.
+changelog:
+  url: null
+  note: No dated changelog or release notes are published for the Duuo Platform API.
+roadmap:
+  url: null
+  published_intent:
+    - >-
+      "Get Quote Status: TO BE RELEASED AT A LATER DATE" — a GET returning the latest status of a
+      given quoteId, where a quoteStatus of "Bound" means the quote became a policy.
+    - >-
+      "Get Policies: TO BE RELEASED AT A LATER DATE" — intended to return the list of policies a
+      partner has issued.
+  note: >-
+    Not a roadmap page — these are two operations Duuo announced inside the tenant section of its
+    own collection and never shipped publicly. No Roadmap pointer is emitted.
+retirement_risk:
+  level: high
+  evidence: >-
+    The only public documentation surface for this API was unpublished between 2026-02 and 2026-07
+    while the marketing pages that link to it were left in place. Any partner integration now
+    depends entirely on documents delivered privately during onboarding.

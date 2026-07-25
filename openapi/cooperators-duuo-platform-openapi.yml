@@ -1,0 +1,1176 @@
+openapi: 3.1.0
+info:
+  title: Duuo Platform API
+  version: '1.0'
+  summary: Partner-gated embedded insurance API for Duuo, the digital insurance brand of The Co-operators.
+  description: >-
+    Machine-readable reconstruction of the Duuo Platform API — the partner-gated embedded
+    insurance API of Duuo Insurance Services Inc., the digital brand of The Co-operators,
+    whose products are underwritten by Co-operators General Insurance Company.
+
+
+    PROVENANCE: this document was DERIVED, operation for operation, from Duuo's own published
+    developer-portal Postman collection ("Developer Portal", collection id 26639007, publish id
+    2s93sXcubU), retrieved from the Internet Archive capture of
+    https://developer.duuo.ca/api/collections/26639007/2s93sXcubU (capture 2024-01-27, last live
+    archived snapshot 2026-02-06). The live portal at https://developer.duuo.ca/ returns HTTP 404
+    as of 2026-07-25 — the collection has been unpublished — so nothing here is live-verified.
+    Every path, method, parameter, request field, response field, example and error shape below
+    is taken verbatim from that published collection. Nothing has been invented. Duuo states that
+    "more detailed API reference documentation" is delivered to partners during onboarding, so
+    this is a floor on the real surface, not a ceiling.
+
+
+    ACCESS: not self-serve. Partners run a discovery call with the Duuo partnerships team, sign a
+    partnership agreement, are assigned a Partner Account Manager, and are then issued API access
+    credentials plus a partner-specific host. A compliance review of the integration is required
+    before go-live.
+
+
+    ORDERING: Duuo documents both product flows as strictly ordered — "The Event API's must be
+    executed in the order outlined below. Failure to follow the specified order of API's for this
+    product will result in error." The same note applies to the tenant flow.
+
+
+    COMPLIANCE: insurance is a regulated industry in Canada. Duuo's collection carries a binding
+    compliance guide — required consent text, required disclaimers, a required licensed-representative
+    support redirect, and required Duuo attribution and logo on every screen where coverage is
+    discussed — and states that non-compliance may result in access termination.
+  contact:
+    name: Duuo Partnerships
+    url: https://duuo.ca/new-partners/
+    email: info@duuo.ca
+  termsOfService: https://duuo.ca/terms-of-use
+  x-provenance:
+    method: derived
+    source: https://web.archive.org/web/20240127073206id_/https://developer.duuo.ca/api/collections/26639007/2s93sXcubU
+    source_type: postman-collection
+    source_name: Developer Portal
+    postman_collection_id: '26639007'
+    postman_publish_id: 2s93sXcubU
+    archived_capture: '2024-01-27'
+    last_live_archived_snapshot: '2026-02-06'
+    live_status_on_derivation: 404
+    derived: '2026-07-25'
+    derived_by: API Evangelist enrichment pipeline
+    live_verified: false
+    note: >-
+      Not published by the provider as OpenAPI. Historical documented surface only; the source
+      collection is no longer publicly available.
+servers:
+  - url: https://{partnerHost}
+    description: >-
+      Partner-issued host. Duuo supplies the base URL to each partner during onboarding ("The url
+      supplied to you by the partnership team"); no public base URL is published, and
+      api.duuo.ca / developers.duuo.ca / docs.duuo.ca do not resolve in DNS.
+    variables:
+      partnerHost:
+        default: your-partner-host
+        description: Placeholder. Replace with the host issued by your Duuo Partner Account Manager.
+tags:
+  - name: Event Insurance
+    description: >-
+      Quote and bind Duuo event insurance. Ordered flow — create entity, create quote, get quote,
+      make payment. With bindOnPayment=true (the default for API partners) the policy is created
+      and emailed automatically on successful payment; with bindOnPayment=false the partner must
+      also call Create Policy and Email Policy.
+  - name: Tenant Insurance
+    description: >-
+      Quote and bind Duuo tenant (renters) insurance. Ordered flow — check eligibility, update
+      quote, add insured, make payment. Duuo notes that Get Quote Status and Get Policies were
+      documented as "to be released at a later date" and are not part of this surface.
+security:
+  - duuoBearer: []
+paths:
+  /api/v1/event/entity:
+    post:
+      operationId: createEventEntity
+      tags: [Event Insurance]
+      summary: Create entity
+      description: >-
+        Creates a new entity (or "Customer") with Duuo, using information the partner already
+        holds (for example from account creation or checkout). If the user has previously created
+        an account with Duuo they are moved on to the next step. Step 1 of the ordered event flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventEntityRequest'
+            example:
+              firstName: Firsttest
+              lastName: Lasttest
+              name: First and Last
+              email: test@gmail.com
+              phone: '1212121212'
+              province: ON
+              language: en_US
+      responses:
+        '200':
+          description: Entity created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+              example:
+                data:
+                  resolved:
+                    response:
+                      response: success
+                    responseCode: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '401':
+          $ref: '#/components/responses/EventAccessForbidden'
+        '440':
+          $ref: '#/components/responses/EventLoginTimeout'
+        '500':
+          description: Error creating profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+  /api/v1/event/quote:
+    post:
+      operationId: createEventQuote
+      tags: [Event Insurance]
+      summary: Create quote
+      description: >-
+        Collects the event information required to generate a quote and return a premium, and
+        carries everything needed to later bind and email the policy. Step 2 of the ordered event
+        flow. Compliance: once the user provides their event details, Duuo's list of excluded
+        activities must be shown and acknowledged before proceeding.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventQuoteRequest'
+            example:
+              entityEmail: test@gmail.com
+              eventTypeLabel: Dance
+              eventSingleOrMultiple: singleEvent
+              eventStartDate: 2023-03-01 || 4:30 pm
+              eventEndDate: 2023-03-05 || 5:30 pm
+              eventProvince: ON
+              eventInsurance: 4
+              dayFactor: '>2 Hours per Day'
+              numberAttendees: 25 or Less
+              eventAlcoholServed: 'No'
+              eventName: John's Dance
+              address:
+                - eventAddress: 123 Test Street, Hamilton, ON, Canada
+                  venueName: Recreation Centre
+                  venueAddress: 123 Test Street
+                  venueCity: Hamilton
+                  venuePostalCode: A1A 1A1
+                  coiRecipient: testpartner@gmail.com
+              coHostDetails:
+                - cohostNameOrEntity: Test Cohost
+                  cohostEmail: testcohost@gmail.com
+              additionalInsuredDetails:
+                - additionalInsuredNameOrEntity: Test Additional Insured
+                  additionalInsuredEmail: testaddinsured@gmail.com
+      responses:
+        '200':
+          description: Quote created, with premium, sales tax and total cost in CAD.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+              example:
+                data:
+                  resolved:
+                    response:
+                      totalCost: 48.7
+                      salesTax: 3.6
+                      premium: 45
+                      response: success
+                      quoteId: 6467cf740951dac053e71af1
+                    responseCode: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '401':
+          $ref: '#/components/responses/EventAccessForbidden'
+        '440':
+          $ref: '#/components/responses/EventLoginTimeout'
+        '500':
+          description: Error creating quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+  /api/v1/event/quote/{quoteId}:
+    get:
+      operationId: getEventQuote
+      tags: [Event Insurance]
+      summary: Get quote
+      description: >-
+        Retrieves the details of a previously created event quote so the price and coverage can be
+        displayed. Step 3 of the ordered event flow. Duuo notes that quote values returned in the
+        Partner Accepted Testing (sandbox) environment are test values only and do not represent
+        real-time cost. Compliance: the quoted price, the event details the user supplied, the
+        three coverage limits, a link to the full policy wording, and the misrepresentation
+        disclaimer must all be on screen when the quote is displayed.
+      parameters:
+        - $ref: '#/components/parameters/QuoteId'
+      responses:
+        '200':
+          description: Quote detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+              example:
+                data:
+                  resolved:
+                    response:
+                      quoteData:
+                        submissionIdAgency: 646778684e606d641487f152
+                        submissionIdEntity: 646cd469982700e2cf5e74b2
+                        owners:
+                          name: First and Last
+                          email: test@gmail.com
+                        effectiveDate: '2023-05-23'
+                        eventTypeLabel: Dance
+                        eventSingleOrMultiple: singleEvent
+                    responseCode: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '401':
+          $ref: '#/components/responses/EventAccessForbidden'
+        '440':
+          $ref: '#/components/responses/EventLoginTimeout'
+        '500':
+          description: Error getting quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+  /api/v1/event/quote/{quoteId}/payment:
+    post:
+      operationId: createEventQuotePayment
+      tags: [Event Insurance]
+      summary: Make payment
+      description: >-
+        Returns a URL for redirecting the customer to the Duuo-hosted payment page. Step 4 of the
+        ordered event flow. When bindOnPayment=true (the default flow for API partners) this is the
+        final step — the policy is created and emailed automatically on successful payment. When
+        bindOnPayment=false the partner must then call Create Policy and Email Policy. Compliance:
+        generalConsent and emailConsent must be collected with Duuo's required check-box text
+        before redirection, and post-redirection guidance text must be shown on the original page.
+      parameters:
+        - $ref: '#/components/parameters/QuoteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventPaymentRequest'
+            example:
+              bindOnPayment: true
+              generalConsent: true
+              emailConsent: true
+      responses:
+        '200':
+          description: Payment redirect URL generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+              example:
+                data:
+                  resolved:
+                    response:
+                      url: example.com/payhere
+                      response: success
+                    responseCode: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '401':
+          $ref: '#/components/responses/EventAccessForbidden'
+        '440':
+          $ref: '#/components/responses/EventLoginTimeout'
+        '500':
+          description: Error getting pre-quote, or error creating quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+  /api/v1/event/policy:
+    post:
+      operationId: createEventPolicy
+      tags: [Event Insurance]
+      summary: Create policy
+      description: >-
+        Binds the quote to create a policy. Only used when the policy is bound outside the payment
+        process; mandatory when bindOnPayment=false was sent to Make Payment. Returns both the
+        internal policyId used for process mapping and the customer-facing policyNumber.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventPolicyRequest'
+            example:
+              quoteId: 646d01fa4a5918a3df63fb58
+      responses:
+        '200':
+          description: Policy created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+              example:
+                data:
+                  resolved:
+                    response:
+                      policyNumber: Zf-000186
+                      policyId: 645a7535e27d0a35d355a19b6
+                      response: success
+                    responseCode: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '401':
+          $ref: '#/components/responses/EventAccessForbidden'
+        '440':
+          $ref: '#/components/responses/EventLoginTimeout'
+        '500':
+          description: Error retrieving quote, or error creating policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+  /api/v1/event/policy/{policyId}/email:
+    put:
+      operationId: emailEventPolicy
+      tags: [Event Insurance]
+      summary: Email policy
+      description: >-
+        Triggers an email containing the customer's Confirmation of Insurance. Only used when the
+        policy is bound outside the payment process; mandatory when bindOnPayment=false was sent to
+        Make Payment.
+      parameters:
+        - $ref: '#/components/parameters/PolicyId'
+      responses:
+        '200':
+          description: Confirmation of insurance emailed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+              example:
+                data:
+                  resolved:
+                    response:
+                      response: success
+                    responseCode: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '401':
+          $ref: '#/components/responses/EventAccessForbidden'
+        '440':
+          $ref: '#/components/responses/EventLoginTimeout'
+        '500':
+          description: Error sending email.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventEnvelope'
+  /api/v1/tenant/eligibility:
+    post:
+      operationId: checkTenantEligibility
+      tags: [Tenant Insurance]
+      summary: Check eligibility
+      description: >-
+        Checks the customer's eligibility for tenant insurance and, if eligible, automatically
+        creates an initial quote. Step 1 of the ordered tenant flow. Both personalInfoConsent and
+        creditScoreConsent must be true, and Duuo requires each consent to be captured separately
+        with its own check box and its own required disclosure text (a soft credit check is run).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantEligibilityRequest'
+            example:
+              personalInfoConsent: true
+              creditScoreConsent: true
+              insuredAddressProvince: ON
+              contactInfoEmail: contactemail@email.com
+              languageLocal: en_US
+              insuredAddressPostalCode: A1A 1A1
+      responses:
+        '200':
+          description: Eligible; initial quote created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantEnvelope'
+              example:
+                data:
+                  resolved:
+                    message:
+                      quoteStartDate: '2023-08-02'
+                      quoteExpirationDate: '2023-09-01'
+                      ruleIdSelectionDate: '2023-08-02'
+                      quoteId: TQ-1000459
+                      quoteSubmissionId: 64cab1966825d1f3bc64bb18
+                      statusReferenceId: dpTenApiStatus200_001
+                    status: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '400':
+          $ref: '#/components/responses/TenantBadRequest'
+        '403':
+          $ref: '#/components/responses/TenantAccessDenied'
+        '404':
+          $ref: '#/components/responses/TenantNotFound'
+  /api/v1/tenant/quote/{quoteSubmissionId}:
+    put:
+      operationId: updateTenantQuote
+      tags: [Tenant Insurance]
+      summary: Update quote
+      description: >-
+        Updates the quote begun at Check Eligibility with the full risk detail and returns the four
+        priced options (standard monthly, standard annual, enhanced monthly, enhanced annual). Step
+        2 of the ordered tenant flow. Fields the partner already holds may be pre-populated.
+        Duuo notes that prices returned in the Partner Accepted Testing (PAT) environment are test
+        values only. Compliance: the quoted prices, the policy details the user supplied, the
+        coverage limits with links to the standard and enhanced policy wordings, and the
+        misrepresentation disclaimer must all be on screen.
+      parameters:
+        - $ref: '#/components/parameters/QuoteSubmissionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantQuoteUpdateRequest'
+            example:
+              insuredAddressUnit: Suite 24
+              insuredAddressCity: EDMONTON
+              insuredAddressCountry: Canada
+              insuredAddressStreet: 325 Milner Ave.
+              insuredAddressPostalCode: M1B 5N1
+              insuredBuildingType: House or floor with no basement
+              contactInfoLastName: Last
+              contactInfoFirstName: First
+              contactInfoDOB: '1998-01-31'
+              contactInfoEmail: contactemail@email.com
+              contactInfoPhone: 734-608-4793
+              claimsPriorHistory: false
+              monitoredSecuritySystem: true
+              monitoredFireDetectionSystem: true
+              monitoredWaterLeakDetectionSystem: true
+              policyEffectiveDate: '2023-12-31'
+              personalContentCoverageLimit: '10000'
+              liabilityCoverageLimit: '1000000'
+              deductibleLimit: '2000'
+      responses:
+        '200':
+          description: Quote updated and priced.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantEnvelope'
+              example:
+                data:
+                  resolved:
+                    message:
+                      heChargedPremTotalPremium: 36
+                      heChargedPremTotalStandard: 36
+                      heChargedPremTotalStandardYearly: 38.88
+                      heChargedPremTotalPremiumYearly: 38.88
+                      heChargedPremTotalStandardMonthly: 3.24
+                      heChargedPremTotalPremiumMonthly: 3.24
+                      statusReferenceId: dpTenApiStatus200_001
+                    status: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '400':
+          $ref: '#/components/responses/TenantBadRequest'
+        '403':
+          $ref: '#/components/responses/TenantAccessDenied'
+        '404':
+          $ref: '#/components/responses/TenantNotFound'
+        '422':
+          $ref: '#/components/responses/TenantUnprocessable'
+  /api/v1/tenant/quote/{quoteSubmissionId}/addinsured:
+    put:
+      operationId: addTenantQuoteInsured
+      tags: [Tenant Insurance]
+      summary: Add insured
+      description: >-
+        Records the customer's package and payment-frequency selection and any additional insureds
+        or landlord details on the quote. Step 3 of the ordered tenant flow. Compliance:
+        thirdPartySharingConsent must be collected with Duuo's required check-box text before the
+        customer is redirected to the payment page, and must be true for the call to succeed.
+      parameters:
+        - $ref: '#/components/parameters/QuoteSubmissionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantAddInsuredRequest'
+            example:
+              packageSelection: premium
+              paymentMethod: credit
+              languageLocal: en_US
+              landlordEmailAddress: contactemail@email.com
+              landlordFirstName: John
+              landlordLastName: Doe
+              firstAdditionalInsuredFirstName: First
+              firstAdditionalInsuredLastName: Last
+              thirdPartySharingConsent: 'true'
+      responses:
+        '200':
+          description: Insureds and selection recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantEnvelope'
+              example:
+                data:
+                  resolved:
+                    message:
+                      statusReferenceId: dpTenApiStatus200_001
+                    status: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '400':
+          $ref: '#/components/responses/TenantBadRequest'
+        '403':
+          $ref: '#/components/responses/TenantAccessDenied'
+        '404':
+          $ref: '#/components/responses/TenantNotFound'
+  /api/v1/tenant/quote/{quoteSubmissionId}/payment:
+    put:
+      operationId: createTenantQuotePayment
+      tags: [Tenant Insurance]
+      summary: Make payment
+      description: >-
+        Returns a URL for redirecting the customer to the Duuo-hosted payment page — the final
+        screen of the tenant purchase journey. On successful payment the tenant policy is bound and
+        the certificate of insurance is emailed to the client automatically. Compliance: this call
+        only succeeds when personalInfoConsent and creditScoreConsent (Check Eligibility),
+        thirdPartySharingConsent (Add Insured) and paymentAndTermsOfUseConsent are all true.
+      parameters:
+        - $ref: '#/components/parameters/QuoteSubmissionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantPaymentRequest'
+            example:
+              bindOnPayment: true
+              paymentAndTermsOfUseConsent: true
+      responses:
+        '200':
+          description: Payment redirect URL generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantEnvelope'
+              example:
+                data:
+                  resolved:
+                    message:
+                      url: example.com/payhere
+                      statusReferenceId: dpTenApiStatus200_001
+                    status: '200'
+                metadata: {}
+                validationErrors: []
+                invalidNavigationPanels: []
+        '400':
+          $ref: '#/components/responses/TenantBadRequest'
+        '403':
+          $ref: '#/components/responses/TenantAccessDenied'
+        '404':
+          $ref: '#/components/responses/TenantNotFound'
+components:
+  securitySchemes:
+    duuoBearer:
+      type: http
+      scheme: bearer
+      description: >-
+        Bearer token obtained from the partner-issued OAuth 2.0 token endpoint. The token expires
+        every 60 minutes and must be refreshed.
+    duuoOAuth2:
+      type: oauth2
+      description: >-
+        OAuth 2.0 client credentials grant. POST grant_type=client_credentials to the token URL
+        supplied by the Duuo partnerships team, with an HTTP Basic Authorization header of
+        "Basic " + Base64("client_id" + ":" + "client_secret"). No scopes are published. The token
+        URL is partner-issued and is not a public endpoint, so the tokenUrl below is a placeholder.
+      flows:
+        clientCredentials:
+          tokenUrl: https://your-partner-token-host/oauth/token
+          scopes: {}
+  parameters:
+    QuoteId:
+      name: quoteId
+      in: path
+      required: true
+      description: The quote id received when an event quote was created.
+      schema:
+        type: string
+        examples: ['646d01fa4a5918a3df63fb58']
+    PolicyId:
+      name: policyId
+      in: path
+      required: true
+      description: >-
+        The internal policy id used for process mapping. This is not the customer-facing policy
+        number.
+      schema:
+        type: string
+        examples: ['645a7535e27d0a35d355a19b6']
+    QuoteSubmissionId:
+      name: quoteSubmissionId
+      in: path
+      required: true
+      description: The quoteSubmissionId returned by Check Eligibility.
+      schema:
+        type: string
+        examples: ['64cab1966825d1f3bc64bb18']
+  responses:
+    EventAccessForbidden:
+      description: Access forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventEnvelope'
+    EventLoginTimeout:
+      description: Login timeout.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventEnvelope'
+    TenantBadRequest:
+      description: >-
+        Bad request. responseDetails is an array of field-level errors, each with the offending
+        field, a human message, and a statusReferenceId.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: 400
+                response: Bad Request
+                responseDetails:
+                  - field: personalInfoConsent
+                    message: The personal information consent field is required.
+                    statusReferenceId: dpTenApiStatus400_008
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+    TenantAccessDenied:
+      description: Access denied — requires access management.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: '403'
+                response: error
+                responseDetails: Access denied.
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+    TenantNotFound:
+      description: Route or module not found. Returned as the plain-text body "Module not found".
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: Module not found
+    TenantUnprocessable:
+      description: Unprocessable entity.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: '422'
+                response: Error
+                responseDetails: Unprocessable Entity
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+  schemas:
+    EventEnvelope:
+      type: object
+      description: >-
+        Duuo platform response envelope for the event product. The payload sits at
+        data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                response:
+                  type: object
+                  description: Operation payload. Always carries a "response" status string on success.
+                  additionalProperties: true
+                responseCode:
+                  type: string
+                  description: >-
+                    200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific
+                    500 meaning varies by operation).
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    TenantEnvelope:
+      type: object
+      description: >-
+        Duuo platform response envelope for the tenant product. The payload sits at
+        data.resolved.message, with the code at data.resolved.status. Every success carries a
+        statusReferenceId (for example dpTenApiStatus200_001) for support correlation.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                message:
+                  type: object
+                  additionalProperties: true
+                status:
+                  type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    TenantErrorEnvelope:
+      type: object
+      description: Duuo platform error envelope for the tenant product.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                status:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                response:
+                  type: string
+                responseDetails:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        $ref: '#/components/schemas/TenantFieldError'
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    TenantFieldError:
+      type: object
+      description: One field-level validation error.
+      properties:
+        field:
+          type: string
+          description: The request field that failed validation.
+        message:
+          type: string
+          description: Human-readable message.
+        statusReferenceId:
+          type: string
+          description: Duuo status reference id, for example dpTenApiStatus400_008.
+    EventEntityRequest:
+      type: object
+      required: [firstName, lastName, email]
+      properties:
+        firstName:
+          type: string
+          description: First name of the entity.
+        lastName:
+          type: string
+          description: Last name of the entity.
+        name:
+          type: string
+          description: Full name of the entity.
+        email:
+          type: string
+          format: email
+          description: Email address of the entity.
+        province:
+          type: string
+          description: Canadian province or territory code where the entity lives, for example ON or BC.
+        phone:
+          type: string
+          description: Phone number of the entity.
+        language:
+          type: string
+          description: ISO language code. Defaults to en_US.
+          enum: [en_US]
+    EventQuoteRequest:
+      type: object
+      required:
+        - eventTypeLabel
+        - dayFactor
+        - eventAlcoholServed
+        - numberAttendees
+        - eventInsurance
+        - eventProvince
+        - address
+      properties:
+        entityEmail:
+          type: string
+          format: email
+          description: Email of the entity created at Create Entity.
+        eventTypeLabel:
+          type: string
+          description: >-
+            Type of event. Duuo publishes two closed lists of acceptable values — a non-sporting
+            list (Wedding & Reception, Dance, Convention, Birthday Party, Funerals, Festival,
+            Graduation, Reunion, Trade/Flea Market, Workshops, Yoga, and others) and a sporting
+            list (Baseball, Basketball, Curling, Golf, Hockey variants, Pickle Ball, Soccer,
+            Softball, Tennis, and others). Duuo recommends rendering it as a dropdown.
+        dayFactor:
+          type: string
+          description: Number of hours per day of the event.
+          enum: ['<2 Hours per Day', '>2 Hours per Day']
+        eventAlcoholServed:
+          type: string
+          description: >-
+            Whether alcohol will be served. An event lasting 25 days or longer cannot be insured
+            with alcohol served, and a sporting event cannot be insured with alcohol served. The
+            partner must display Duuo's required liquor-licence text below this question.
+          enum: ['Yes', 'No']
+        numberAttendees:
+          type: string
+          description: >-
+            Estimated number of attendees. Non-sporting bands — "25 or Less", "between 26-125",
+            "between 126-175", "between 176-250", "between 251-350", "between 351-500",
+            "between 501-1,000". Sporting bands — "30 or Less", "between 31-100",
+            "between 101-175", "between 176-250", "between 251-350", "between 351-500",
+            "between 501-750", "between 751-1,000".
+        eventInsurance:
+          type: number
+          description: >-
+            Number of days the event will last, rounded up to a whole number. singleEvent must be
+            1 to 7 days; multipleEvent must be 2 to 75 days.
+        eventProvince:
+          type: string
+          description: Province of the event.
+          enum: [AB, BC, MB, NB, NL, NS, ON, PE, SK]
+        eventSingleOrMultiple:
+          type: string
+          description: >-
+            Whether the event is single-day or multi-day. A single event cannot last longer than
+            seven days or be hosted in more than one location; a multiple event can be hosted in
+            more than one location.
+          enum: [singleEvent, multipleEvent]
+        eventName:
+          type: string
+        eventStartDate:
+          type: string
+          description: Event start, in Duuo's "YYYY-MM-DD || h:mm am/pm" form.
+        eventEndDate:
+          type: string
+          description: Event end, in Duuo's "YYYY-MM-DD || h:mm am/pm" form.
+        promoCode:
+          type: string
+          description: Promotional code provided by Duuo for discounts; "false" when none exists.
+        address:
+          type: array
+          description: Address and venue of the event.
+          items:
+            $ref: '#/components/schemas/EventAddress'
+        coHostDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventCoHost'
+        additionalInsuredDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventAdditionalInsured'
+    EventAddress:
+      type: object
+      properties:
+        eventAddress:
+          type: string
+        venueName:
+          type: string
+        venueAddress:
+          type: string
+        venueCity:
+          type: string
+        venuePostalCode:
+          type: string
+        coiRecipient:
+          type: string
+          format: email
+          description: Recipient of the certificate of insurance for this venue.
+    EventCoHost:
+      type: object
+      properties:
+        cohostNameOrEntity:
+          type: string
+        cohostEmail:
+          type: string
+          format: email
+    EventAdditionalInsured:
+      type: object
+      properties:
+        additionalInsuredNameOrEntity:
+          type: string
+        additionalInsuredEmail:
+          type: string
+          format: email
+    EventPaymentRequest:
+      type: object
+      required: [bindOnPayment, generalConsent, emailConsent]
+      properties:
+        bindOnPayment:
+          type: boolean
+          description: >-
+            When true, the policy is bound and issued after payment completes. True is the default
+            flow for API partners.
+        generalConsent:
+          type: boolean
+          description: >-
+            Customer agrees to the terms of use and to the collection of their personal
+            information. Must be true for the call to succeed.
+        emailConsent:
+          type: boolean
+          description: >-
+            Customer agrees to Duuo sharing the certificate of insurance with third parties on
+            their behalf. Must be true for the call to succeed.
+    EventPolicyRequest:
+      type: object
+      required: [quoteId]
+      properties:
+        quoteId:
+          type: string
+          description: ID of the quote to create a policy from.
+    TenantEligibilityRequest:
+      type: object
+      required:
+        - personalInfoConsent
+        - creditScoreConsent
+        - contactInfoEmail
+        - insuredAddressPostalCode
+      properties:
+        personalInfoConsent:
+          type: boolean
+          description: >-
+            Explicit consent to Duuo's personal-information disclosure. Must be captured on its own
+            check box with Duuo's full required text, which cannot share a screen with other fields.
+        creditScoreConsent:
+          type: boolean
+          description: >-
+            Explicit consent to a soft credit check. Must be captured on its own check box with
+            Duuo's required text.
+        insuredAddressProvince:
+          type: string
+          enum: [AB, BC, MB, NB, NS, ON, PE, SK]
+        contactInfoEmail:
+          type: string
+          format: email
+        languageLocal:
+          type: string
+          description: ISO language code. Defaults to en_US.
+        insuredAddressPostalCode:
+          type: string
+          description: Postal code of the address to be insured, in "LNL NLN" format.
+    TenantQuoteUpdateRequest:
+      type: object
+      required:
+        - insuredAddressUnit
+        - insuredAddressCity
+        - insuredAddressCountry
+        - insuredAddressStreet
+        - insuredAddressPostalCode
+        - claimsPriorHistory
+        - monitoredSecuritySystem
+        - monitoredFireDetectionSystem
+        - monitoredWaterLeakDetectionSystem
+        - policyEffectiveDate
+        - personalContentCoverageLimit
+        - liabilityCoverageLimit
+        - deductibleLimit
+      properties:
+        insuredAddressUnit:
+          type: string
+        insuredAddressCity:
+          type: string
+        insuredAddressCountry:
+          type: string
+        insuredAddressStreet:
+          type: string
+        insuredAddressPostalCode:
+          type: string
+          description: '"LNL NLN" format.'
+        insuredBuildingType:
+          type: string
+        contactInfoFirstName:
+          type: string
+        contactInfoLastName:
+          type: string
+        contactInfoDOB:
+          type: string
+          format: date
+        contactInfoEmail:
+          type: string
+          format: email
+        contactInfoPhone:
+          type: string
+        currentAddressUnit:
+          type: string
+        currentAddressStreet:
+          type: string
+        currentAddressCity:
+          type: string
+        currentAddressProvince:
+          type: string
+        currentAddressPostalCode:
+          type: string
+          description: '"LNL NLN" format.'
+        mailingAddressUnit:
+          type: string
+        mailingAddressStreet:
+          type: string
+        mailingAddressCity:
+          type: string
+        mailingAddressProvince:
+          type: string
+        mailingAddressPostalCode:
+          type: string
+          description: '"LNL NLN" format.'
+        claimsPriorHistory:
+          type: boolean
+          description: Has the insured made any claims before?
+        monitoredSecuritySystem:
+          type: boolean
+        monitoredFireDetectionSystem:
+          type: boolean
+        monitoredWaterLeakDetectionSystem:
+          type: boolean
+        policyEffectiveDate:
+          type: string
+          format: date
+          description: >-
+            YYYY-MM-DD. Today+1 up to a maximum of 30 days from the current system date; cannot be
+            today's date.
+        personalContentCoverageLimit:
+          type: string
+          description: Personal content coverage limit.
+          enum: ['10000', '25000', '50000', '75000', '100000', '150000']
+        liabilityCoverageLimit:
+          type: string
+          description: Liability coverage limit.
+          enum: ['1000000', '2000000']
+        deductibleLimit:
+          type: string
+          description: Deductible limit.
+          enum: ['1000', '2000', '3000', '5000']
+    TenantAddInsuredRequest:
+      type: object
+      required: [packageSelection, paymentFrequency, paymentMethod, languageLocal, thirdPartySharingConsent]
+      properties:
+        packageSelection:
+          type: string
+          description: Package selection.
+          enum: [premium, standard]
+        paymentFrequency:
+          type: string
+          description: Payment frequency.
+          enum: [monthly, annually]
+        paymentMethod:
+          type: string
+          description: Payment method to be used.
+          enum: [credit]
+        languageLocal:
+          type: string
+          description: ISO language code. Defaults to en-US.
+        landlordFirstName:
+          type: string
+        landlordLastName:
+          type: string
+        landlordEmailAddress:
+          type: string
+          format: email
+        firstAdditionalInsuredFirstName:
+          type: string
+        firstAdditionalInsuredLastName:
+          type: string
+        secondAdditionalInsuredFirstName:
+          type: string
+        secondAdditionalInsuredLastName:
+          type: string
+        thirdAdditionalInsuredFirstName:
+          type: string
+        thirdAdditionalInsuredLastName:
+          type: string
+        thirdPartySharingConsent:
+          type: boolean
+          description: >-
+            Customer permits Duuo to send the proof of insurance to appropriate third parties such
+            as a landlord, and to notify them if the policy is cancelled. Must be true for the call
+            to succeed.
+    TenantPaymentRequest:
+      type: object
+      required: [bindOnPayment, paymentAndTermsOfUseConsent]
+      properties:
+        bindOnPayment:
+          type: boolean
+          description: When true, binds and issues the policy after payment completes.
+        paymentAndTermsOfUseConsent:
+          type: boolean
+          description: >-
+            Customer accepts the Duuo Terms of Use (https://duuo.ca/terms-of-use/) and the Payment
+            Agreement (https://duuo.ca/payment-agreement/). Must be true for the call to succeed.
