@@ -1,0 +1,300 @@
+aid: cooperators
+name: The Co-operators
+review:
+  question: Does The Co-operators expose a public, self-serve developer portal or downloadable API specifications?
+  answer: false
+  date: '2026-07-25'
+  reviewer: API Evangelist
+  homeMarket: Canada
+  tier: carrier-pc
+findings:
+  summary: |
+    The Co-operators is a Canadian multi-line insurance and financial services
+    co-operative (P&C, life, farm, travel, group benefits, group retirement,
+    wealth and institutional asset management), formed in 1978 from the
+    amalgamation of the Saskatchewan and Ontario co-operative insurers, with
+    more than $62 billion in assets under administration, nearly 7,000
+    employees and more than 2,800 licensed insurance representatives.
+
+    There is no first-party developer portal. Every candidate developer
+    subdomain fails to resolve in DNS and every candidate path on the corporate
+    site returns HTTP 404. The advisor and broker channel is a set of sign-in
+    walls, not an integration surface, and the sign-in landing page names no
+    API, no developer documentation, and no data-exchange standard.
+
+    The one real API surface in the group belongs to Duuo, the embedded
+    insurance brand owned by The Co-operators. Duuo publicly advertises a
+    developer portal at https://developer.duuo.ca/ and states that partners can
+    "view our API documentation" there. That host is a Postman public-hosted
+    documentation domain (CNAME to phs.getpostman.com) and it returns HTTP 404
+    as of the review date — the published collection has been unpublished, and
+    the underlying Postman documenter URL 404s as well. Duuo's marketing pages
+    still link to the dead portal.
+
+    Because the portal was live as recently as 2026-02-06, an archived capture
+    of the published collection was retrieved from the Internet Archive to
+    characterise the surface honestly (see provenance below). It documented
+    quote and bind/issue for two products and nothing else. Access was never
+    self-serve at any point: the portal's own onboarding text requires a
+    discovery call, a signed partnership agreement, an assigned Partner Account
+    Manager, issued API access credentials, and a compliance review before
+    go-live, with "more detailed API reference documentation" delivered only
+    during onboarding.
+
+    No ACORD, AL3, ACORD XML, NGDS or CSIO reference was found in any Co-operators
+    or Duuo public material, and The Co-operators does not appear in the public
+    CSIO member directory (CSIO being Canada's P&C data-standards body and the
+    domestic analogue of ACORD). The absence of any published data-standards
+    posture is itself the finding for this carrier.
+  developerPortal:
+    firstParty:
+      exists: false
+      note: No first-party developer portal on cooperators.ca.
+    probes:
+      - url: https://developer.cooperators.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://developers.cooperators.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://docs.cooperators.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://api.cooperators.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://apis.cooperators.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://partners.cooperators.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://www.cooperators.ca/developers
+        status: 404
+      - url: https://www.cooperators.ca/developer
+        status: 404
+      - url: https://www.cooperators.ca/api
+        status: 404
+      - url: https://www.cooperators.ca/partners
+        status: 404
+      - url: https://www.cooperators.ca/integrations
+        status: 404
+      - url: https://www.cooperators.ca/en/developers
+        status: 404
+      - url: https://www.cooperators.ca/en/brokers
+        status: 404
+      - url: https://www.cooperators.ca/en/advisors/sign-in
+        status: 200
+        classification: login wall
+        note: >-
+          Advisor/broker sign-in landing page linking to illustration.cumis.com,
+          lifepages.cumis.com, lifeportal.cooperators.ca, benefitsnowlogon.cooperators.ca,
+          basis.cooperators.ca and groupretirementsavingslogon.cooperators.ca. No API,
+          developer documentation, integration guide, ACORD, CSIO, EDI or download is
+          mentioned anywhere on the page.
+      - url: https://www.cooperators.ca/en/advisors/partner
+        status: 200
+        classification: marketing page
+      - url: https://developer.duuo.ca/
+        status: 404
+        classification: >-
+          Advertised developer portal for the Duuo brand. Postman public-hosted docs
+          domain (CNAME phs.getpostman.com); server returns Postman's "Not found" page.
+      - url: https://documenter.getpostman.com/view/26639007/2s93sXcubU
+        status: 404
+        note: Underlying Postman documenter URL for the same collection; also unpublished.
+      - url: https://developers.duuo.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://api.duuo.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://docs.duuo.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://duuo.ca/embedded-partners/
+        status: 200
+        classification: marketing page describing the partner program
+      - url: https://developer.sovereigninsurance.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://api.sovereigninsurance.ca
+        status: 'DNS: no A record (connection failed)'
+      - url: https://developer.cumis.com
+        status: 'DNS: no A record (connection failed)'
+      - url: https://api.cumis.com
+        status: 'DNS: no A record (connection failed)'
+    portalConfirmed: false
+    gated: true
+  specifications:
+    openapiHarvested: false
+    count: 0
+    probes:
+      - url: https://www.cooperators.ca/openapi.json
+        status: 404
+      - url: https://www.cooperators.ca/swagger.json
+        status: 404
+      - url: https://www.cooperators.ca/api-docs
+        status: 404
+    note: >-
+      No OpenAPI, Swagger, AsyncAPI or Protobuf artifact is published by The Co-operators,
+      Duuo, Sovereign Insurance or CUMIS. Nothing was saved; the openapi/ directory is
+      deliberately absent.
+  acordPosture:
+    summary: no ACORD reference found
+    detail: >-
+      Searched Co-operators and Duuo public pages, the advisor sign-in surface, and the
+      archived Duuo developer-portal collection for ACORD, AL3, ACORD XML, NGDS, IVANS and
+      CSIO. Zero matches (the single "EDI" string hit in the Duuo collection was a substring
+      of "POST-REDIRECTION", not an EDI reference). The Co-operators does not appear in the
+      public CSIO member directory at https://csio.com/membership/member-directory (HTTP 200,
+      no login required), CSIO being the Canadian P&C data-standards body whose XML standards
+      are the domestic counterpart to ACORD XML. No agency-download, AL3 or broker
+      data-exchange posture is published.
+  insuranceVerbs:
+    quote: true
+    bind: true
+    issue: true
+    fnol: false
+    audience: partner-only
+    note: >-
+      Quote and bind/issue are covered by the Duuo Platform API for tenant and event
+      insurance only, and only for contracted embedded partners. No claims or FNOL API is
+      published anywhere in the group. The Co-operators' own P&C, life, farm, group benefits
+      and wealth lines expose no quote, bind, issue or FNOL API at all.
+  authModel:
+    scheme: OAuth 2.0 client_credentials
+    detail: >-
+      Duuo Platform API: POST to a partner-issued token URL with an HTTP Basic
+      Authorization header of Base64(client_id + ":" + client_secret) and a JSON body of
+      {"grant_type":"client_credentials"}; the returned token is sent as a Bearer token on
+      subsequent calls. Credentials are issued by a Partner Account Manager after a signed
+      partnership agreement. No public host, no self-serve key issuance, no sandbox signup.
+    wellKnown:
+      - url: https://www.cooperators.ca/.well-known/openid-configuration
+        status: 404
+      - url: https://www.cooperators.ca/.well-known/oauth-authorization-server
+        status: 404
+  webhooks:
+    exists: false
+    note: No event catalog, webhook documentation or AsyncAPI was found for any brand in the group.
+  graphql:
+    exists: false
+    note: No /graphql surface was advertised or discovered.
+  postman:
+    publicCollections: false
+    detail: >-
+      Two Postman teams exist for the brand — "Duuo by The Cooperators" (public handle
+      duuo-by-the-cooperators, id 6430694) and "Unqork - Duuo Partner API Team" (public
+      handle unqork-duuo, id 4892515) — but the Postman public search index reports
+      collectionCount 0 and workspaceCount 0 for both, and the custom docs domain
+      developer.duuo.ca 404s. There is no live public Postman collection.
+  sourceCode:
+    githubOrganization: false
+    note: >-
+      No GitHub organization belongs to The Co-operators. github.com/cooperators is an
+      unrelated UK account (2 template repos) and github.com/Co-operators is an unrelated
+      2016 account with one .NET socket repo. github.com/duuo and github.com/cumis do not exist.
+  transports:
+    - protocol: REST
+      scheme: https
+      documented: partner-only
+      note: >-
+        Duuo Platform API over HTTPS at a partner-issued host; paths documented as
+        /api/v1/event/* and /api/v1/tenant/*. No public base URL is published.
+    - protocol: SOAP
+      documented: false
+    - protocol: GraphQL
+      documented: false
+    - protocol: gRPC
+      documented: false
+    - protocol: WebSocket
+      documented: false
+    - protocol: ACORD/AL3 or CSIO EDI
+      documented: false
+      note: No agency-download or data-exchange transport is published.
+  endpointsObservedArchived:
+    provenance:
+      source: https://web.archive.org/web/20240127073206/https://developer.duuo.ca/api/collections/26639007/2s93sXcubU
+      collectionName: Developer Portal
+      postmanCollectionId: '26639007'
+      postmanPublishId: 2s93sXcubU
+      archivedCaptureDate: '2024-01-27'
+      lastLiveArchivedSnapshot: '2026-02-06'
+      liveStatusOnReviewDate: 404
+      fetchedForReview: '2026-07-25'
+      note: >-
+        Endpoints below were read from an Internet Archive capture of Duuo's own published
+        Postman collection. They are recorded as evidence of the historical documented
+        surface only. They are NOT live-verified, no spec file was saved, and the collection
+        is no longer published. The archived collection also embedded an expired 2023 example
+        JWT, which was deliberately not committed to this repo.
+    authorization:
+      - POST {token-url}
+    eventInsurance:
+      - POST {url}/api/v1/event/entity
+      - POST {url}/api/v1/event/quote
+      - GET {url}/api/v1/event/quote/{quoteId}
+      - POST {url}/api/v1/event/quote/{quoteId}/payment
+      - POST {url}/api/v1/event/policy
+      - PUT {url}/api/v1/event/policy/{policyId}/email
+    tenantInsurance:
+      - POST {url}/api/v1/tenant/eligibility
+      - PUT {url}/api/v1/tenant/quote/{quoteSubmissionId}
+      - PUT {url}/api/v1/tenant/quote/{quoteSubmissionId}/addinsured
+      - PUT {url}/api/v1/tenant/quote/{quoteSubmissionId}/payment
+sources:
+  - url: https://www.cooperators.ca/
+    type: Website
+    status: 200
+    note: Redirects to /en/personal. Corporate site; no developer or API navigation anywhere.
+  - url: https://www.cooperators.ca/en/about-us/corporate-overview
+    type: About
+    status: 200
+    note: >-
+      "more than $62 billion in assets under administration"; "nearly 7,000 employees and a
+      network of more than 2,800 licensed insurance representatives across Canada";
+      "multi-line insurance, wealth management products, institutional asset management and
+      brokerage operations".
+  - url: https://www.cooperators.ca/en/about-us/our-story/origins
+    type: About
+    status: 200
+    note: >-
+      Co-operative Life Insurance Company formed in Regina in 1945; Co-operative Fire and
+      Casualty Company 1951; "The Saskatchewan and Ontario insurance operations amalgamated
+      to form Co-operators in 1978."
+  - url: https://www.cooperators.ca/en/advisors/sign-in
+    type: SignIn
+    status: 200
+    note: Login wall for advisors and brokers; no API or standards reference.
+  - url: https://www.cooperators.ca/sitemap.xml
+    type: Sitemap
+    status: 200
+    note: >-
+      1,120 URLs, all on www.cooperators.ca. No developer, API, integration or standards
+      path exists in the sitemap.
+  - url: https://www.cooperators.ca/robots.txt
+    type: Robots
+    status: 200
+    note: Updated July 15 2026; no developer or API paths disallowed or referenced.
+  - url: https://duuo.ca/
+    type: Website
+    status: 200
+    note: >-
+      "Backed by Co-operators"; links to https://developer.duuo.ca/ as the developer portal
+      for embedding tenant, event, vendor, home and auto insurance.
+  - url: https://duuo.ca/embedded-partners/
+    type: Documentation
+    status: 200
+    note: >-
+      Offers partners "the option of an API solution, or an embedded insurance integration"
+      and points to the developer portal; the only call to action is "Book a Demo".
+  - url: https://developer.duuo.ca/
+    type: APIReference
+    status: 404
+    note: Advertised developer portal; Postman public-hosted docs domain, currently unpublished.
+  - url: https://csio.com/membership/member-directory
+    type: Standards
+    status: 200
+    note: Public CSIO member directory; The Co-operators and Sovereign Insurance are not listed.
+actions:
+  openapiDirectoryCreated: false
+  specsSaved: 0
+  apisListed: 1
+  reason: >-
+    A single apis[] entry was recorded for the Duuo Platform API — a real, company-published
+    partner API — with its live marketing documentation as the human URL. No OpenAPI,
+    AsyncAPI, Postman or GraphQL artifact was saved because none is currently published. The
+    correct reading of this provider is that a large Canadian multi-line carrier ships no
+    public self-serve API, and its one embedded-insurance API is contract-gated with a dead
+    documentation portal.

@@ -1,0 +1,84 @@
+aid: cooperators
+url: https://raw.githubusercontent.com/api-evangelist/cooperators/refs/heads/main/apis.yml
+name: The Co-operators
+kind: company
+description: >-
+  The Co-operators is a Canadian insurance and financial services co-operative, formed in 1978 from the
+  amalgamation of the Saskatchewan and Ontario co-operative insurers whose roots run back to the
+  Co-operative Life Insurance Company founded in Regina in 1945. It is owned by Canadian co-operatives,
+  credit union centrals and farm organizations rather than public shareholders, and writes multi-line
+  property and casualty, home, auto, farm, travel and life insurance alongside group benefits, group
+  retirement and savings, wealth management and institutional asset management, reporting more than
+  $62 billion in assets under administration, nearly 7,000 employees and more than 2,800 licensed
+  insurance representatives across Canada. Its API posture is partner-gated. There is no first-party
+  developer portal on cooperators.ca — developer, developers, docs, api and partners subdomains do not
+  resolve in DNS, and /developers, /developer, /api, /partners and /integrations all return HTTP 404 —
+  while the advisor and broker channel is a set of sign-in walls (lifeportal.cooperators.ca,
+  benefitsnowlogon.cooperators.ca, basis.cooperators.ca, illustration.cumis.com). The only public API
+  surface in the group belongs to its embedded-insurance brand Duuo, whose Duuo Platform partner APIs
+  cover account, quote, payment and policy issuance for tenant and event insurance behind a signed
+  partnership agreement and issued OAuth 2.0 client credentials; the developer portal Duuo advertises
+  at developer.duuo.ca is a Postman-hosted documentation domain that returns HTTP 404 as of 2026-07-25.
+  No ACORD, AL3 or CSIO reference was found anywhere in the company's public materials.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Insurance
+- Canada
+- Property and Casualty
+- Life Insurance
+- Group Benefits
+- Embedded Insurance
+- Co-operative
+- Wealth Management
+- Partner API
+created: '2026-07-25'
+modified: '2026-07-25'
+specificationVersion: '0.19'
+apis:
+- aid: cooperators:duuo-platform-api
+  name: Duuo Platform API
+  description: >-
+    Partner-gated embedded insurance API from Duuo, the digital insurance brand of The Co-operators.
+    Duuo's own published documentation describes APIs for account, quote and policy, risk rating and
+    payment so partners can embed tenant and event insurance into their own applications. Access is not
+    self-serve: partners engage the Duuo partnerships team, sign a partnership agreement, are assigned a
+    Partner Account Manager, and are then issued API access credentials, a partner-specific host and the
+    detailed API reference. Authentication is OAuth 2.0 client_credentials, with the client id and secret
+    supplied as an HTTP Basic header to a partner-issued token URL and the resulting bearer token sent on
+    every call. The publicly published operations covered quote and bind/issue for two products — event
+    insurance (create entity, create quote, get quote, make payment, create policy, email policy) and
+    tenant insurance (check eligibility, update quote, add insured, make payment) — with no claims or
+    FNOL surface. The developer portal Duuo links to from duuo.ca, https://developer.duuo.ca/, is a
+    Postman-hosted documentation domain that returned HTTP 404 on 2026-07-25; the collection it published
+    has been unpublished, so no live public reference remains.
+  humanURL: https://duuo.ca/embedded-partners/
+  tags:
+  - Embedded Insurance
+  - Quote
+  - Policy
+  - Tenant Insurance
+  - Event Insurance
+  - Partner API
+  properties:
+  - type: Documentation
+    url: https://duuo.ca/embedded-partners/
+  - type: Website
+    url: https://duuo.ca/
+  - type: SignUp
+    url: https://duuo.ca/new-partners/
+common:
+- type: Website
+  url: https://www.cooperators.ca/
+- type: About
+  url: https://www.cooperators.ca/en/about-us/corporate-overview
+- type: SignIn
+  url: https://www.cooperators.ca/en/advisors/sign-in
+- type: InvestorRelations
+  url: https://www.cooperators.ca/en/about-us/corporate-overview/investor-relations
+- type: SecurityAndPrivacy
+  url: https://www.cooperators.ca/en/security-privacy
+- type: LinkedIn
+  url: https://www.linkedin.com/company/co-operators
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
