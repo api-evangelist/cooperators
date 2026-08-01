@@ -1,0 +1,21 @@
+{
+  "repo": "cooperators",
+  "feeds": [
+    {
+      "source": "https://duuo.ca/privacy",
+      "feed_url": "https://duuo.ca/privacy/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    },
+    {
+      "source": "https://www.cooperators.ca/en/about-us/newsroom",
+      "feed_url": "https://www.cooperators.ca/en/about-us/newsroom",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-01T15:49:00Z"
+}
