@@ -1,0 +1,222 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Duuo Platform API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Event Insurance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{partnerHost}/api/v1/event/entity",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new entity (or \"Customer\") with Duuo, using information the partner already holds (for example from account creation or checkout). If the user has previously created an account with Duuo they are moved on to the next step. Step 1 of the ordered event flow."
+        },
+        {
+          "info": {
+            "name": "Create quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{partnerHost}/api/v1/event/quote",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Collects the event information required to generate a quote and return a premium, and carries everything needed to later bind and email the policy. Step 2 of the ordered event flow. Compliance: once the user provides their event details, Duuo's list of excluded activities must be shown and acknowledged before proceeding."
+        },
+        {
+          "info": {
+            "name": "Get quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{partnerHost}/api/v1/event/quote/:quoteId",
+            "params": [
+              {
+                "name": "quoteId",
+                "value": "",
+                "type": "path",
+                "description": "The quote id received when an event quote was created."
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a previously created event quote so the price and coverage can be displayed. Step 3 of the ordered event flow. Duuo notes that quote values returned in the Partner Accepted Testing (sandbox) environment are test values only and do not represent real-time cost. Compliance: the quoted price, the event details the user supplied, the three coverage limits, a link to the full policy wording, and the misrepresentation disclaimer must all be on screen when the quote is displaye"
+        },
+        {
+          "info": {
+            "name": "Make payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{partnerHost}/api/v1/event/quote/:quoteId/payment",
+            "params": [
+              {
+                "name": "quoteId",
+                "value": "",
+                "type": "path",
+                "description": "The quote id received when an event quote was created."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a URL for redirecting the customer to the Duuo-hosted payment page. Step 4 of the ordered event flow. When bindOnPayment=true (the default flow for API partners) this is the final step — the policy is created and emailed automatically on successful payment. When bindOnPayment=false the partner must then call Create Policy and Email Policy. Compliance: generalConsent and emailConsent must be collected with Duuo's required check-box text before redirection, and post-redirection guidance te"
+        },
+        {
+          "info": {
+            "name": "Create policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{partnerHost}/api/v1/event/policy",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Binds the quote to create a policy. Only used when the policy is bound outside the payment process; mandatory when bindOnPayment=false was sent to Make Payment. Returns both the internal policyId used for process mapping and the customer-facing policyNumber."
+        },
+        {
+          "info": {
+            "name": "Email policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{partnerHost}/api/v1/event/policy/:policyId/email",
+            "params": [
+              {
+                "name": "policyId",
+                "value": "",
+                "type": "path",
+                "description": "The internal policy id used for process mapping. This is not the customer-facing policy number."
+              }
+            ]
+          },
+          "docs": "Triggers an email containing the customer's Confirmation of Insurance. Only used when the policy is bound outside the payment process; mandatory when bindOnPayment=false was sent to Make Payment."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tenant Insurance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check eligibility",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{partnerHost}/api/v1/tenant/eligibility",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Checks the customer's eligibility for tenant insurance and, if eligible, automatically creates an initial quote. Step 1 of the ordered tenant flow. Both personalInfoConsent and creditScoreConsent must be true, and Duuo requires each consent to be captured separately with its own check box and its own required disclosure text (a soft credit check is run)."
+        },
+        {
+          "info": {
+            "name": "Update quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{partnerHost}/api/v1/tenant/quote/:quoteSubmissionId",
+            "params": [
+              {
+                "name": "quoteSubmissionId",
+                "value": "",
+                "type": "path",
+                "description": "The quoteSubmissionId returned by Check Eligibility."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the quote begun at Check Eligibility with the full risk detail and returns the four priced options (standard monthly, standard annual, enhanced monthly, enhanced annual). Step 2 of the ordered tenant flow. Fields the partner already holds may be pre-populated. Duuo notes that prices returned in the Partner Accepted Testing (PAT) environment are test values only. Compliance: the quoted prices, the policy details the user supplied, the coverage limits with links to the standard and enhance"
+        },
+        {
+          "info": {
+            "name": "Add insured",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{partnerHost}/api/v1/tenant/quote/:quoteSubmissionId/addinsured",
+            "params": [
+              {
+                "name": "quoteSubmissionId",
+                "value": "",
+                "type": "path",
+                "description": "The quoteSubmissionId returned by Check Eligibility."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Records the customer's package and payment-frequency selection and any additional insureds or landlord details on the quote. Step 3 of the ordered tenant flow. Compliance: thirdPartySharingConsent must be collected with Duuo's required check-box text before the customer is redirected to the payment page, and must be true for the call to succeed."
+        },
+        {
+          "info": {
+            "name": "Make payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{partnerHost}/api/v1/tenant/quote/:quoteSubmissionId/payment",
+            "params": [
+              {
+                "name": "quoteSubmissionId",
+                "value": "",
+                "type": "path",
+                "description": "The quoteSubmissionId returned by Check Eligibility."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a URL for redirecting the customer to the Duuo-hosted payment page — the final screen of the tenant purchase journey. On successful payment the tenant policy is bound and the certificate of insurance is emailed to the client automatically. Compliance: this call only succeeds when personalInfoConsent and creditScoreConsent (Check Eligibility), thirdPartySharingConsent (Add Insured) and paymentAndTermsOfUseConsent are all true."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

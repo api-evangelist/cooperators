@@ -1,0 +1,3314 @@
+{
+  "item": [
+    {
+      "id": "8f3828b8-fec2-43c8-a974-ce99654a92dd",
+      "name": "Event Insurance",
+      "description": {
+        "content": "Quote and bind Duuo event insurance. Ordered flow — create entity, create quote, get quote, make payment. With bindOnPayment=true (the default for API partners) the policy is created and emailed automatically on successful payment; with bindOnPayment=false the partner must also call Create Policy and Email Policy.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0e514ca7-f853-4b16-bbab-87b8308bc60d",
+          "name": "Create entity",
+          "request": {
+            "name": "Create entity",
+            "description": {
+              "content": "Creates a new entity (or \"Customer\") with Duuo, using information the partner already holds (for example from account creation or checkout). If the user has previously created an account with Duuo they are moved on to the next step. Step 1 of the ordered event flow.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "event",
+                "entity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"email\": \"<email>\",\n  \"name\": \"<string>\",\n  \"province\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"language\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e0a27f23-d9bc-48ba-a975-3a1090aa6679",
+              "name": "Entity created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Firsttest\",\n  \"lastName\": \"Lasttest\",\n  \"name\": \"First and Last\",\n  \"email\": \"test@gmail.com\",\n  \"phone\": \"1212121212\",\n  \"province\": \"ON\",\n  \"language\": \"en_US\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"response\": \"success\"\n      },\n      \"responseCode\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "25a0f3ab-a314-4fa0-b63d-110cb697f557",
+              "name": "Access forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Firsttest\",\n  \"lastName\": \"Lasttest\",\n  \"name\": \"First and Last\",\n  \"email\": \"test@gmail.com\",\n  \"phone\": \"1212121212\",\n  \"province\": \"ON\",\n  \"language\": \"en_US\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6966f5db-631f-4c43-80f2-bd693e758db8",
+              "name": "Login timeout.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Firsttest\",\n  \"lastName\": \"Lasttest\",\n  \"name\": \"First and Last\",\n  \"email\": \"test@gmail.com\",\n  \"phone\": \"1212121212\",\n  \"province\": \"ON\",\n  \"language\": \"en_US\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "code": 440,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "489c4cec-11fd-423a-a1e3-ca321ca85b0f",
+              "name": "Error creating profile.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Firsttest\",\n  \"lastName\": \"Lasttest\",\n  \"name\": \"First and Last\",\n  \"email\": \"test@gmail.com\",\n  \"phone\": \"1212121212\",\n  \"province\": \"ON\",\n  \"language\": \"en_US\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd3b19c8-c65f-409e-8758-2588557ff465",
+          "name": "Create quote",
+          "request": {
+            "name": "Create quote",
+            "description": {
+              "content": "Collects the event information required to generate a quote and return a premium, and carries everything needed to later bind and email the policy. Step 2 of the ordered event flow. Compliance: once the user provides their event details, Duuo's list of excluded activities must be shown and acknowledged before proceeding.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "event",
+                "quote"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventTypeLabel\": \"<string>\",\n  \"dayFactor\": \"<string>\",\n  \"eventAlcoholServed\": \"<string>\",\n  \"numberAttendees\": \"<string>\",\n  \"eventInsurance\": \"<number>\",\n  \"eventProvince\": \"<string>\",\n  \"address\": [\n    {\n      \"eventAddress\": \"<string>\",\n      \"venueName\": \"<string>\",\n      \"venueAddress\": \"<string>\",\n      \"venueCity\": \"<string>\",\n      \"venuePostalCode\": \"<string>\",\n      \"coiRecipient\": \"<email>\"\n    },\n    {\n      \"eventAddress\": \"<string>\",\n      \"venueName\": \"<string>\",\n      \"venueAddress\": \"<string>\",\n      \"venueCity\": \"<string>\",\n      \"venuePostalCode\": \"<string>\",\n      \"coiRecipient\": \"<email>\"\n    }\n  ],\n  \"entityEmail\": \"<email>\",\n  \"eventSingleOrMultiple\": \"<string>\",\n  \"eventName\": \"<string>\",\n  \"eventStartDate\": \"<string>\",\n  \"eventEndDate\": \"<string>\",\n  \"promoCode\": \"<string>\",\n  \"coHostDetails\": [\n    {\n      \"cohostNameOrEntity\": \"<string>\",\n      \"cohostEmail\": \"<email>\"\n    },\n    {\n      \"cohostNameOrEntity\": \"<string>\",\n      \"cohostEmail\": \"<email>\"\n    }\n  ],\n  \"additionalInsuredDetails\": [\n    {\n      \"additionalInsuredNameOrEntity\": \"<string>\",\n      \"additionalInsuredEmail\": \"<email>\"\n    },\n    {\n      \"additionalInsuredNameOrEntity\": \"<string>\",\n      \"additionalInsuredEmail\": \"<email>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7ba47b55-2fd5-4305-af2f-9cdae00178ea",
+              "name": "Quote created, with premium, sales tax and total cost in CAD.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityEmail\": \"test@gmail.com\",\n  \"eventTypeLabel\": \"Dance\",\n  \"eventSingleOrMultiple\": \"singleEvent\",\n  \"eventStartDate\": \"2023-03-01 || 4:30 pm\",\n  \"eventEndDate\": \"2023-03-05 || 5:30 pm\",\n  \"eventProvince\": \"ON\",\n  \"eventInsurance\": 4,\n  \"dayFactor\": \">2 Hours per Day\",\n  \"numberAttendees\": \"25 or Less\",\n  \"eventAlcoholServed\": \"No\",\n  \"eventName\": \"John's Dance\",\n  \"address\": [\n    {\n      \"eventAddress\": \"123 Test Street, Hamilton, ON, Canada\",\n      \"venueName\": \"Recreation Centre\",\n      \"venueAddress\": \"123 Test Street\",\n      \"venueCity\": \"Hamilton\",\n      \"venuePostalCode\": \"A1A 1A1\",\n      \"coiRecipient\": \"testpartner@gmail.com\"\n    }\n  ],\n  \"coHostDetails\": [\n    {\n      \"cohostNameOrEntity\": \"Test Cohost\",\n      \"cohostEmail\": \"testcohost@gmail.com\"\n    }\n  ],\n  \"additionalInsuredDetails\": [\n    {\n      \"additionalInsuredNameOrEntity\": \"Test Additional Insured\",\n      \"additionalInsuredEmail\": \"testaddinsured@gmail.com\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"totalCost\": 48.7,\n        \"salesTax\": 3.6,\n        \"premium\": 45,\n        \"response\": \"success\",\n        \"quoteId\": \"6467cf740951dac053e71af1\"\n      },\n      \"responseCode\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1b172646-16b0-44b4-a325-da8144e74b0c",
+              "name": "Access forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityEmail\": \"test@gmail.com\",\n  \"eventTypeLabel\": \"Dance\",\n  \"eventSingleOrMultiple\": \"singleEvent\",\n  \"eventStartDate\": \"2023-03-01 || 4:30 pm\",\n  \"eventEndDate\": \"2023-03-05 || 5:30 pm\",\n  \"eventProvince\": \"ON\",\n  \"eventInsurance\": 4,\n  \"dayFactor\": \">2 Hours per Day\",\n  \"numberAttendees\": \"25 or Less\",\n  \"eventAlcoholServed\": \"No\",\n  \"eventName\": \"John's Dance\",\n  \"address\": [\n    {\n      \"eventAddress\": \"123 Test Street, Hamilton, ON, Canada\",\n      \"venueName\": \"Recreation Centre\",\n      \"venueAddress\": \"123 Test Street\",\n      \"venueCity\": \"Hamilton\",\n      \"venuePostalCode\": \"A1A 1A1\",\n      \"coiRecipient\": \"testpartner@gmail.com\"\n    }\n  ],\n  \"coHostDetails\": [\n    {\n      \"cohostNameOrEntity\": \"Test Cohost\",\n      \"cohostEmail\": \"testcohost@gmail.com\"\n    }\n  ],\n  \"additionalInsuredDetails\": [\n    {\n      \"additionalInsuredNameOrEntity\": \"Test Additional Insured\",\n      \"additionalInsuredEmail\": \"testaddinsured@gmail.com\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e7cb2806-2ac8-49b7-9933-88e598ccf2c4",
+              "name": "Login timeout.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityEmail\": \"test@gmail.com\",\n  \"eventTypeLabel\": \"Dance\",\n  \"eventSingleOrMultiple\": \"singleEvent\",\n  \"eventStartDate\": \"2023-03-01 || 4:30 pm\",\n  \"eventEndDate\": \"2023-03-05 || 5:30 pm\",\n  \"eventProvince\": \"ON\",\n  \"eventInsurance\": 4,\n  \"dayFactor\": \">2 Hours per Day\",\n  \"numberAttendees\": \"25 or Less\",\n  \"eventAlcoholServed\": \"No\",\n  \"eventName\": \"John's Dance\",\n  \"address\": [\n    {\n      \"eventAddress\": \"123 Test Street, Hamilton, ON, Canada\",\n      \"venueName\": \"Recreation Centre\",\n      \"venueAddress\": \"123 Test Street\",\n      \"venueCity\": \"Hamilton\",\n      \"venuePostalCode\": \"A1A 1A1\",\n      \"coiRecipient\": \"testpartner@gmail.com\"\n    }\n  ],\n  \"coHostDetails\": [\n    {\n      \"cohostNameOrEntity\": \"Test Cohost\",\n      \"cohostEmail\": \"testcohost@gmail.com\"\n    }\n  ],\n  \"additionalInsuredDetails\": [\n    {\n      \"additionalInsuredNameOrEntity\": \"Test Additional Insured\",\n      \"additionalInsuredEmail\": \"testaddinsured@gmail.com\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "code": 440,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2348d46b-c464-49b2-b251-cc859c203af3",
+              "name": "Error creating quote.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entityEmail\": \"test@gmail.com\",\n  \"eventTypeLabel\": \"Dance\",\n  \"eventSingleOrMultiple\": \"singleEvent\",\n  \"eventStartDate\": \"2023-03-01 || 4:30 pm\",\n  \"eventEndDate\": \"2023-03-05 || 5:30 pm\",\n  \"eventProvince\": \"ON\",\n  \"eventInsurance\": 4,\n  \"dayFactor\": \">2 Hours per Day\",\n  \"numberAttendees\": \"25 or Less\",\n  \"eventAlcoholServed\": \"No\",\n  \"eventName\": \"John's Dance\",\n  \"address\": [\n    {\n      \"eventAddress\": \"123 Test Street, Hamilton, ON, Canada\",\n      \"venueName\": \"Recreation Centre\",\n      \"venueAddress\": \"123 Test Street\",\n      \"venueCity\": \"Hamilton\",\n      \"venuePostalCode\": \"A1A 1A1\",\n      \"coiRecipient\": \"testpartner@gmail.com\"\n    }\n  ],\n  \"coHostDetails\": [\n    {\n      \"cohostNameOrEntity\": \"Test Cohost\",\n      \"cohostEmail\": \"testcohost@gmail.com\"\n    }\n  ],\n  \"additionalInsuredDetails\": [\n    {\n      \"additionalInsuredNameOrEntity\": \"Test Additional Insured\",\n      \"additionalInsuredEmail\": \"testaddinsured@gmail.com\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "712ce005-2cba-4a87-9c14-adad7043fd2f",
+          "name": "Get quote",
+          "request": {
+            "name": "Get quote",
+            "description": {
+              "content": "Retrieves the details of a previously created event quote so the price and coverage can be displayed. Step 3 of the ordered event flow. Duuo notes that quote values returned in the Partner Accepted Testing (sandbox) environment are test values only and do not represent real-time cost. Compliance: the quoted price, the event details the user supplied, the three coverage limits, a link to the full policy wording, and the misrepresentation disclaimer must all be on screen when the quote is displayed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "event",
+                "quote",
+                ":quoteId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "quoteId",
+                  "description": "(Required) The quote id received when an event quote was created."
+                },
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "323720ff-e22a-475d-9e02-b798efaa9b1c",
+              "name": "Quote detail.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"quoteData\": {\n          \"submissionIdAgency\": \"646778684e606d641487f152\",\n          \"submissionIdEntity\": \"646cd469982700e2cf5e74b2\",\n          \"owners\": {\n            \"name\": \"First and Last\",\n            \"email\": \"test@gmail.com\"\n          },\n          \"effectiveDate\": \"2023-05-23\",\n          \"eventTypeLabel\": \"Dance\",\n          \"eventSingleOrMultiple\": \"singleEvent\"\n        }\n      },\n      \"responseCode\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "66983b7b-20fb-4d2a-acc2-fce9f7d52a85",
+              "name": "Access forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9b021399-3cc4-4422-9b38-8180a685c025",
+              "name": "Login timeout.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "code": 440,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "addf16d1-da63-466f-a1f3-d6d3d0020ed4",
+              "name": "Error getting quote.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bfdb1ed5-2c2f-4f16-b071-e7e4b1a50b2d",
+          "name": "Make payment",
+          "request": {
+            "name": "Make payment",
+            "description": {
+              "content": "Returns a URL for redirecting the customer to the Duuo-hosted payment page. Step 4 of the ordered event flow. When bindOnPayment=true (the default flow for API partners) this is the final step — the policy is created and emailed automatically on successful payment. When bindOnPayment=false the partner must then call Create Policy and Email Policy. Compliance: generalConsent and emailConsent must be collected with Duuo's required check-box text before redirection, and post-redirection guidance text must be shown on the original page.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "event",
+                "quote",
+                ":quoteId",
+                "payment"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "quoteId",
+                  "description": "(Required) The quote id received when an event quote was created."
+                },
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bindOnPayment\": \"<boolean>\",\n  \"generalConsent\": \"<boolean>\",\n  \"emailConsent\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cc65980f-a616-4159-8a19-7fcb4a911f5f",
+              "name": "Payment redirect URL generated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"generalConsent\": true,\n  \"emailConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"url\": \"example.com/payhere\",\n        \"response\": \"success\"\n      },\n      \"responseCode\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c22c96c0-10c7-4a85-9d05-24843b901f6c",
+              "name": "Access forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"generalConsent\": true,\n  \"emailConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6b0ffe92-fdd1-4293-aafc-30d64391741b",
+              "name": "Login timeout.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"generalConsent\": true,\n  \"emailConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "code": 440,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e9e164c7-44da-43cd-a936-f2c3f30fa78b",
+              "name": "Error getting pre-quote, or error creating quote.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "quote",
+                    ":quoteId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteId",
+                      "description": "(Required) The quote id received when an event quote was created."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"generalConsent\": true,\n  \"emailConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "de75c273-4060-4285-99a3-73d98848bebf",
+          "name": "Create policy",
+          "request": {
+            "name": "Create policy",
+            "description": {
+              "content": "Binds the quote to create a policy. Only used when the policy is bound outside the payment process; mandatory when bindOnPayment=false was sent to Make Payment. Returns both the internal policyId used for process mapping and the customer-facing policyNumber.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "event",
+                "policy"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quoteId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c26cb49b-1540-43df-9211-a1ccaa892146",
+              "name": "Policy created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": \"646d01fa4a5918a3df63fb58\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"policyNumber\": \"Zf-000186\",\n        \"policyId\": \"645a7535e27d0a35d355a19b6\",\n        \"response\": \"success\"\n      },\n      \"responseCode\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "561629bb-4fca-4031-babd-782f230ef0e6",
+              "name": "Access forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": \"646d01fa4a5918a3df63fb58\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "874c1639-d59d-474b-9b8e-8e3cd099b5a6",
+              "name": "Login timeout.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": \"646d01fa4a5918a3df63fb58\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "code": 440,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "270dd1d3-13ba-43c0-bfcf-67ab4e08414e",
+              "name": "Error retrieving quote, or error creating policy.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quoteId\": \"646d01fa4a5918a3df63fb58\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5ed96213-2b0e-4a9e-ad1d-e945f4d9ddfa",
+          "name": "Email policy",
+          "request": {
+            "name": "Email policy",
+            "description": {
+              "content": "Triggers an email containing the customer's Confirmation of Insurance. Only used when the policy is bound outside the payment process; mandatory when bindOnPayment=false was sent to Make Payment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "event",
+                "policy",
+                ":policyId",
+                "email"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "policyId",
+                  "description": "(Required) The internal policy id used for process mapping. This is not the customer-facing policy number."
+                },
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "068d0eed-f1e4-4a60-8376-1cf807b89816",
+              "name": "Confirmation of insurance emailed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy",
+                    ":policyId",
+                    "email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "policyId",
+                      "description": "(Required) The internal policy id used for process mapping. This is not the customer-facing policy number."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"response\": \"success\"\n      },\n      \"responseCode\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "768ae711-748f-4fd0-8789-2319d3846040",
+              "name": "Access forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy",
+                    ":policyId",
+                    "email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "policyId",
+                      "description": "(Required) The internal policy id used for process mapping. This is not the customer-facing policy number."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d0fbfa0-52c7-420c-adbe-10681f06111e",
+              "name": "Login timeout.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy",
+                    ":policyId",
+                    "email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "policyId",
+                      "description": "(Required) The internal policy id used for process mapping. This is not the customer-facing policy number."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "code": 440,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": 2423.9209792593374\n    },\n    {\n      \"key_0\": \"string\"\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 2029.513967464851\n    },\n    {\n      \"key_0\": 2877.8837647029177\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a3e90c8b-c928-4131-9134-b500d20ed433",
+              "name": "Error sending email.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "event",
+                    "policy",
+                    ":policyId",
+                    "email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "policyId",
+                      "description": "(Required) The internal policy id used for process mapping. This is not the customer-facing policy number."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"response\": {\n        \"key_0\": 4750.312345668429,\n        \"key_1\": 5180,\n        \"key_2\": \"string\",\n        \"key_3\": \"string\",\n        \"key_4\": \"string\"\n      },\n      \"responseCode\": \"string\"\n    }\n  },\n  \"metadata\": {\n    \"key_0\": 9575,\n    \"key_1\": \"string\",\n    \"key_2\": 5351\n  },\n  \"validationErrors\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": 8423,\n      \"key_1\": 7615.894048386705\n    }\n  ],\n  \"invalidNavigationPanels\": [\n    {\n      \"key_0\": 7763,\n      \"key_1\": \"string\"\n    },\n    {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "aaac7131-4b33-472d-9c50-05addc64dc6d",
+      "name": "Tenant Insurance",
+      "description": {
+        "content": "Quote and bind Duuo tenant (renters) insurance. Ordered flow — check eligibility, update quote, add insured, make payment. Duuo notes that Get Quote Status and Get Policies were documented as \"to be released at a later date\" and are not part of this surface.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "217e0472-81a1-4836-b867-e2f3d5e5b547",
+          "name": "Check eligibility",
+          "request": {
+            "name": "Check eligibility",
+            "description": {
+              "content": "Checks the customer's eligibility for tenant insurance and, if eligible, automatically creates an initial quote. Step 1 of the ordered tenant flow. Both personalInfoConsent and creditScoreConsent must be true, and Duuo requires each consent to be captured separately with its own check box and its own required disclosure text (a soft credit check is run).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "eligibility"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"personalInfoConsent\": \"<boolean>\",\n  \"creditScoreConsent\": \"<boolean>\",\n  \"contactInfoEmail\": \"<email>\",\n  \"insuredAddressPostalCode\": \"<string>\",\n  \"insuredAddressProvince\": \"<string>\",\n  \"languageLocal\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7b052c18-ad46-4fc2-9141-b13378c78dfc",
+              "name": "Eligible; initial quote created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "eligibility"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"personalInfoConsent\": true,\n  \"creditScoreConsent\": true,\n  \"insuredAddressProvince\": \"ON\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"languageLocal\": \"en_US\",\n  \"insuredAddressPostalCode\": \"A1A 1A1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"message\": {\n        \"quoteStartDate\": \"2023-08-02\",\n        \"quoteExpirationDate\": \"2023-09-01\",\n        \"ruleIdSelectionDate\": \"2023-08-02\",\n        \"quoteId\": \"TQ-1000459\",\n        \"quoteSubmissionId\": \"64cab1966825d1f3bc64bb18\",\n        \"statusReferenceId\": \"dpTenApiStatus200_001\"\n      },\n      \"status\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "820d95e9-a0d3-4bf6-b463-caff44afd66d",
+              "name": "Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "eligibility"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"personalInfoConsent\": true,\n  \"creditScoreConsent\": true,\n  \"insuredAddressProvince\": \"ON\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"languageLocal\": \"en_US\",\n  \"insuredAddressPostalCode\": \"A1A 1A1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": 400,\n      \"response\": \"Bad Request\",\n      \"responseDetails\": [\n        {\n          \"field\": \"personalInfoConsent\",\n          \"message\": \"The personal information consent field is required.\",\n          \"statusReferenceId\": \"dpTenApiStatus400_008\"\n        }\n      ]\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "655e06fc-91d9-401d-b433-1a6c42979f25",
+              "name": "Access denied — requires access management.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "eligibility"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"personalInfoConsent\": true,\n  \"creditScoreConsent\": true,\n  \"insuredAddressProvince\": \"ON\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"languageLocal\": \"en_US\",\n  \"insuredAddressPostalCode\": \"A1A 1A1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": \"403\",\n      \"response\": \"error\",\n      \"responseDetails\": \"Access denied.\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f6141187-1e3c-4e1e-b624-705e0840c136",
+              "name": "Route or module not found. Returned as the plain-text body \"Module not found\".",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "eligibility"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"personalInfoConsent\": true,\n  \"creditScoreConsent\": true,\n  \"insuredAddressProvince\": \"ON\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"languageLocal\": \"en_US\",\n  \"insuredAddressPostalCode\": \"A1A 1A1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Module not found",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b5a045c7-f170-43e8-8fad-70b67712cc55",
+          "name": "Update quote",
+          "request": {
+            "name": "Update quote",
+            "description": {
+              "content": "Updates the quote begun at Check Eligibility with the full risk detail and returns the four priced options (standard monthly, standard annual, enhanced monthly, enhanced annual). Step 2 of the ordered tenant flow. Fields the partner already holds may be pre-populated. Duuo notes that prices returned in the Partner Accepted Testing (PAT) environment are test values only. Compliance: the quoted prices, the policy details the user supplied, the coverage limits with links to the standard and enhanced policy wordings, and the misrepresentation disclaimer must all be on screen.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "quote",
+                ":quoteSubmissionId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "quoteSubmissionId",
+                  "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                },
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"insuredAddressUnit\": \"<string>\",\n  \"insuredAddressCity\": \"<string>\",\n  \"insuredAddressCountry\": \"<string>\",\n  \"insuredAddressStreet\": \"<string>\",\n  \"insuredAddressPostalCode\": \"<string>\",\n  \"claimsPriorHistory\": \"<boolean>\",\n  \"monitoredSecuritySystem\": \"<boolean>\",\n  \"monitoredFireDetectionSystem\": \"<boolean>\",\n  \"monitoredWaterLeakDetectionSystem\": \"<boolean>\",\n  \"policyEffectiveDate\": \"<date>\",\n  \"personalContentCoverageLimit\": \"<string>\",\n  \"liabilityCoverageLimit\": \"<string>\",\n  \"deductibleLimit\": \"<string>\",\n  \"insuredBuildingType\": \"<string>\",\n  \"contactInfoFirstName\": \"<string>\",\n  \"contactInfoLastName\": \"<string>\",\n  \"contactInfoDOB\": \"<date>\",\n  \"contactInfoEmail\": \"<email>\",\n  \"contactInfoPhone\": \"<string>\",\n  \"currentAddressUnit\": \"<string>\",\n  \"currentAddressStreet\": \"<string>\",\n  \"currentAddressCity\": \"<string>\",\n  \"currentAddressProvince\": \"<string>\",\n  \"currentAddressPostalCode\": \"<string>\",\n  \"mailingAddressUnit\": \"<string>\",\n  \"mailingAddressStreet\": \"<string>\",\n  \"mailingAddressCity\": \"<string>\",\n  \"mailingAddressProvince\": \"<string>\",\n  \"mailingAddressPostalCode\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "48c10259-e302-4350-a0e9-89bce8bbe841",
+              "name": "Quote updated and priced.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"insuredAddressUnit\": \"Suite 24\",\n  \"insuredAddressCity\": \"EDMONTON\",\n  \"insuredAddressCountry\": \"Canada\",\n  \"insuredAddressStreet\": \"325 Milner Ave.\",\n  \"insuredAddressPostalCode\": \"M1B 5N1\",\n  \"insuredBuildingType\": \"House or floor with no basement\",\n  \"contactInfoLastName\": \"Last\",\n  \"contactInfoFirstName\": \"First\",\n  \"contactInfoDOB\": \"1998-01-31\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"contactInfoPhone\": \"734-608-4793\",\n  \"claimsPriorHistory\": false,\n  \"monitoredSecuritySystem\": true,\n  \"monitoredFireDetectionSystem\": true,\n  \"monitoredWaterLeakDetectionSystem\": true,\n  \"policyEffectiveDate\": \"2023-12-31\",\n  \"personalContentCoverageLimit\": \"10000\",\n  \"liabilityCoverageLimit\": \"1000000\",\n  \"deductibleLimit\": \"2000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"message\": {\n        \"heChargedPremTotalPremium\": 36,\n        \"heChargedPremTotalStandard\": 36,\n        \"heChargedPremTotalStandardYearly\": 38.88,\n        \"heChargedPremTotalPremiumYearly\": 38.88,\n        \"heChargedPremTotalStandardMonthly\": 3.24,\n        \"heChargedPremTotalPremiumMonthly\": 3.24,\n        \"statusReferenceId\": \"dpTenApiStatus200_001\"\n      },\n      \"status\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6812c9b8-2edd-4b1a-861f-9b614ceeeb67",
+              "name": "Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"insuredAddressUnit\": \"Suite 24\",\n  \"insuredAddressCity\": \"EDMONTON\",\n  \"insuredAddressCountry\": \"Canada\",\n  \"insuredAddressStreet\": \"325 Milner Ave.\",\n  \"insuredAddressPostalCode\": \"M1B 5N1\",\n  \"insuredBuildingType\": \"House or floor with no basement\",\n  \"contactInfoLastName\": \"Last\",\n  \"contactInfoFirstName\": \"First\",\n  \"contactInfoDOB\": \"1998-01-31\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"contactInfoPhone\": \"734-608-4793\",\n  \"claimsPriorHistory\": false,\n  \"monitoredSecuritySystem\": true,\n  \"monitoredFireDetectionSystem\": true,\n  \"monitoredWaterLeakDetectionSystem\": true,\n  \"policyEffectiveDate\": \"2023-12-31\",\n  \"personalContentCoverageLimit\": \"10000\",\n  \"liabilityCoverageLimit\": \"1000000\",\n  \"deductibleLimit\": \"2000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": 400,\n      \"response\": \"Bad Request\",\n      \"responseDetails\": [\n        {\n          \"field\": \"personalInfoConsent\",\n          \"message\": \"The personal information consent field is required.\",\n          \"statusReferenceId\": \"dpTenApiStatus400_008\"\n        }\n      ]\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "687a0dba-5d01-43d8-8752-016716318ecc",
+              "name": "Access denied — requires access management.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"insuredAddressUnit\": \"Suite 24\",\n  \"insuredAddressCity\": \"EDMONTON\",\n  \"insuredAddressCountry\": \"Canada\",\n  \"insuredAddressStreet\": \"325 Milner Ave.\",\n  \"insuredAddressPostalCode\": \"M1B 5N1\",\n  \"insuredBuildingType\": \"House or floor with no basement\",\n  \"contactInfoLastName\": \"Last\",\n  \"contactInfoFirstName\": \"First\",\n  \"contactInfoDOB\": \"1998-01-31\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"contactInfoPhone\": \"734-608-4793\",\n  \"claimsPriorHistory\": false,\n  \"monitoredSecuritySystem\": true,\n  \"monitoredFireDetectionSystem\": true,\n  \"monitoredWaterLeakDetectionSystem\": true,\n  \"policyEffectiveDate\": \"2023-12-31\",\n  \"personalContentCoverageLimit\": \"10000\",\n  \"liabilityCoverageLimit\": \"1000000\",\n  \"deductibleLimit\": \"2000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": \"403\",\n      \"response\": \"error\",\n      \"responseDetails\": \"Access denied.\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4a5b1194-cb17-4ac1-afa2-2ef82cf4e280",
+              "name": "Route or module not found. Returned as the plain-text body \"Module not found\".",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"insuredAddressUnit\": \"Suite 24\",\n  \"insuredAddressCity\": \"EDMONTON\",\n  \"insuredAddressCountry\": \"Canada\",\n  \"insuredAddressStreet\": \"325 Milner Ave.\",\n  \"insuredAddressPostalCode\": \"M1B 5N1\",\n  \"insuredBuildingType\": \"House or floor with no basement\",\n  \"contactInfoLastName\": \"Last\",\n  \"contactInfoFirstName\": \"First\",\n  \"contactInfoDOB\": \"1998-01-31\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"contactInfoPhone\": \"734-608-4793\",\n  \"claimsPriorHistory\": false,\n  \"monitoredSecuritySystem\": true,\n  \"monitoredFireDetectionSystem\": true,\n  \"monitoredWaterLeakDetectionSystem\": true,\n  \"policyEffectiveDate\": \"2023-12-31\",\n  \"personalContentCoverageLimit\": \"10000\",\n  \"liabilityCoverageLimit\": \"1000000\",\n  \"deductibleLimit\": \"2000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Module not found",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "15d8e022-c152-4442-93f7-86cb52030f36",
+              "name": "Unprocessable entity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"insuredAddressUnit\": \"Suite 24\",\n  \"insuredAddressCity\": \"EDMONTON\",\n  \"insuredAddressCountry\": \"Canada\",\n  \"insuredAddressStreet\": \"325 Milner Ave.\",\n  \"insuredAddressPostalCode\": \"M1B 5N1\",\n  \"insuredBuildingType\": \"House or floor with no basement\",\n  \"contactInfoLastName\": \"Last\",\n  \"contactInfoFirstName\": \"First\",\n  \"contactInfoDOB\": \"1998-01-31\",\n  \"contactInfoEmail\": \"contactemail@email.com\",\n  \"contactInfoPhone\": \"734-608-4793\",\n  \"claimsPriorHistory\": false,\n  \"monitoredSecuritySystem\": true,\n  \"monitoredFireDetectionSystem\": true,\n  \"monitoredWaterLeakDetectionSystem\": true,\n  \"policyEffectiveDate\": \"2023-12-31\",\n  \"personalContentCoverageLimit\": \"10000\",\n  \"liabilityCoverageLimit\": \"1000000\",\n  \"deductibleLimit\": \"2000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": \"422\",\n      \"response\": \"Error\",\n      \"responseDetails\": \"Unprocessable Entity\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c0da7f43-9f49-417d-a18a-266120268686",
+          "name": "Add insured",
+          "request": {
+            "name": "Add insured",
+            "description": {
+              "content": "Records the customer's package and payment-frequency selection and any additional insureds or landlord details on the quote. Step 3 of the ordered tenant flow. Compliance: thirdPartySharingConsent must be collected with Duuo's required check-box text before the customer is redirected to the payment page, and must be true for the call to succeed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "quote",
+                ":quoteSubmissionId",
+                "addinsured"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "quoteSubmissionId",
+                  "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                },
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageSelection\": \"<string>\",\n  \"paymentFrequency\": \"<string>\",\n  \"paymentMethod\": \"<string>\",\n  \"languageLocal\": \"<string>\",\n  \"thirdPartySharingConsent\": \"<boolean>\",\n  \"landlordFirstName\": \"<string>\",\n  \"landlordLastName\": \"<string>\",\n  \"landlordEmailAddress\": \"<email>\",\n  \"firstAdditionalInsuredFirstName\": \"<string>\",\n  \"firstAdditionalInsuredLastName\": \"<string>\",\n  \"secondAdditionalInsuredFirstName\": \"<string>\",\n  \"secondAdditionalInsuredLastName\": \"<string>\",\n  \"thirdAdditionalInsuredFirstName\": \"<string>\",\n  \"thirdAdditionalInsuredLastName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3ddf5bf6-1a81-4b3f-b23e-7e73ef1c582b",
+              "name": "Insureds and selection recorded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "addinsured"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"packageSelection\": \"premium\",\n  \"paymentMethod\": \"credit\",\n  \"languageLocal\": \"en_US\",\n  \"landlordEmailAddress\": \"contactemail@email.com\",\n  \"landlordFirstName\": \"John\",\n  \"landlordLastName\": \"Doe\",\n  \"firstAdditionalInsuredFirstName\": \"First\",\n  \"firstAdditionalInsuredLastName\": \"Last\",\n  \"thirdPartySharingConsent\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"message\": {\n        \"statusReferenceId\": \"dpTenApiStatus200_001\"\n      },\n      \"status\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1373928d-2339-41a1-a834-588bb3799951",
+              "name": "Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "addinsured"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"packageSelection\": \"premium\",\n  \"paymentMethod\": \"credit\",\n  \"languageLocal\": \"en_US\",\n  \"landlordEmailAddress\": \"contactemail@email.com\",\n  \"landlordFirstName\": \"John\",\n  \"landlordLastName\": \"Doe\",\n  \"firstAdditionalInsuredFirstName\": \"First\",\n  \"firstAdditionalInsuredLastName\": \"Last\",\n  \"thirdPartySharingConsent\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": 400,\n      \"response\": \"Bad Request\",\n      \"responseDetails\": [\n        {\n          \"field\": \"personalInfoConsent\",\n          \"message\": \"The personal information consent field is required.\",\n          \"statusReferenceId\": \"dpTenApiStatus400_008\"\n        }\n      ]\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "363df40b-4778-4229-bb3a-762995e9496b",
+              "name": "Access denied — requires access management.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "addinsured"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"packageSelection\": \"premium\",\n  \"paymentMethod\": \"credit\",\n  \"languageLocal\": \"en_US\",\n  \"landlordEmailAddress\": \"contactemail@email.com\",\n  \"landlordFirstName\": \"John\",\n  \"landlordLastName\": \"Doe\",\n  \"firstAdditionalInsuredFirstName\": \"First\",\n  \"firstAdditionalInsuredLastName\": \"Last\",\n  \"thirdPartySharingConsent\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": \"403\",\n      \"response\": \"error\",\n      \"responseDetails\": \"Access denied.\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5765552-b413-4170-8c85-3fbf7a0f0412",
+              "name": "Route or module not found. Returned as the plain-text body \"Module not found\".",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "addinsured"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"packageSelection\": \"premium\",\n  \"paymentMethod\": \"credit\",\n  \"languageLocal\": \"en_US\",\n  \"landlordEmailAddress\": \"contactemail@email.com\",\n  \"landlordFirstName\": \"John\",\n  \"landlordLastName\": \"Doe\",\n  \"firstAdditionalInsuredFirstName\": \"First\",\n  \"firstAdditionalInsuredLastName\": \"Last\",\n  \"thirdPartySharingConsent\": \"true\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Module not found",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6bcaabcc-657f-4f47-a421-c72476095ab5",
+          "name": "Make payment",
+          "request": {
+            "name": "Make payment",
+            "description": {
+              "content": "Returns a URL for redirecting the customer to the Duuo-hosted payment page — the final screen of the tenant purchase journey. On successful payment the tenant policy is bound and the certificate of insurance is emailed to the client automatically. Compliance: this call only succeeds when personalInfoConsent and creditScoreConsent (Check Eligibility), thirdPartySharingConsent (Add Insured) and paymentAndTermsOfUseConsent are all true.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "quote",
+                ":quoteSubmissionId",
+                "payment"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "quoteSubmissionId",
+                  "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                },
+                {
+                  "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                  "type": "any",
+                  "value": "{{partnerHost}}",
+                  "key": "partnerHost"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bindOnPayment\": \"<boolean>\",\n  \"paymentAndTermsOfUseConsent\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cb400981-e979-4f25-a12b-f571308e664d",
+              "name": "Payment redirect URL generated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"paymentAndTermsOfUseConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"message\": {\n        \"url\": \"example.com/payhere\",\n        \"statusReferenceId\": \"dpTenApiStatus200_001\"\n      },\n      \"status\": \"200\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3fed4374-b0e9-4d6b-aaa5-765f00860c78",
+              "name": "Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"paymentAndTermsOfUseConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": 400,\n      \"response\": \"Bad Request\",\n      \"responseDetails\": [\n        {\n          \"field\": \"personalInfoConsent\",\n          \"message\": \"The personal information consent field is required.\",\n          \"statusReferenceId\": \"dpTenApiStatus400_008\"\n        }\n      ]\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aaa6053e-837b-471b-9961-5919de75a1a2",
+              "name": "Access denied — requires access management.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"paymentAndTermsOfUseConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"resolved\": {\n      \"status\": \"403\",\n      \"response\": \"error\",\n      \"responseDetails\": \"Access denied.\"\n    }\n  },\n  \"metadata\": {},\n  \"validationErrors\": [],\n  \"invalidNavigationPanels\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b3fdd60-cb7e-4665-b3fa-654c32cf105a",
+              "name": "Route or module not found. Returned as the plain-text body \"Module not found\".",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tenant",
+                    "quote",
+                    ":quoteSubmissionId",
+                    "payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "quoteSubmissionId",
+                      "description": "(Required) The quoteSubmissionId returned by Check Eligibility."
+                    },
+                    {
+                      "description": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+                      "type": "any",
+                      "value": "{{partnerHost}}",
+                      "key": "partnerHost"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bindOnPayment\": true,\n  \"paymentAndTermsOfUseConsent\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Module not found",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Placeholder. Replace with the host issued by your Duuo Partner Account Manager.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "your-partner-host",
+      "key": "partnerHost"
+    },
+    {
+      "type": "string",
+      "value": "https://{{partnerHost}}",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c8f2ee47-b541-4506-a7c8-47fd63ae3a58",
+    "name": "Duuo Platform API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Machine-readable reconstruction of the Duuo Platform API — the partner-gated embedded insurance API of Duuo Insurance Services Inc., the digital brand of The Co-operators, whose products are underwritten by Co-operators General Insurance Company.\n\nPROVENANCE: this document was DERIVED, operation for operation, from Duuo's own published developer-portal Postman collection (\"Developer Portal\", collection id 26639007, publish id 2s93sXcubU), retrieved from the Internet Archive capture of https://developer.duuo.ca/api/collections/26639007/2s93sXcubU (capture 2024-01-27, last live archived snapshot 2026-02-06). The live portal at https://developer.duuo.ca/ returns HTTP 404 as of 2026-07-25 — the collection has been unpublished — so nothing here is live-verified. Every path, method, parameter, request field, response field, example and error shape below is taken verbatim from that published collection. Nothing has been invented. Duuo states that \"more detailed API reference documentation\" is delivered to partners during onboarding, so this is a floor on the real surface, not a ceiling.\n\nACCESS: not self-serve. Partners run a discovery call with the Duuo partnerships team, sign a partnership agreement, are assigned a Partner Account Manager, and are then issued API access credentials plus a partner-specific host. A compliance review of the integration is required before go-live.\n\nORDERING: Duuo documents both product flows as strictly ordered — \"The Event API's must be executed in the order outlined below. Failure to follow the specified order of API's for this product will result in error.\" The same note applies to the tenant flow.\n\nCOMPLIANCE: insurance is a regulated industry in Canada. Duuo's collection carries a binding compliance guide — required consent text, required disclaimers, a required licensed-representative support redirect, and required Duuo attribution and logo on every screen where coverage is discussed — and states that non-compliance may result in access termination.\n\nContact Support:\n Name: Duuo Partnerships\n Email: info@duuo.ca",
+      "type": "text/plain"
+    }
+  }
+}
