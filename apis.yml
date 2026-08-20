@@ -28,6 +28,16 @@ tags:
 - Life Insurance
 - Group Benefits
 - Embedded Insurance
+- Cooperative
+- Wealth Management
+- Partner API
+tags_raw:
+- Insurance
+- Canada
+- Property and Casualty
+- Life Insurance
+- Group Benefits
+- Embedded Insurance
 - Co-operative
 - Wealth Management
 - Partner API
@@ -59,6 +69,13 @@ apis:
     policy-binding writes, and no webhook, claims, policy-read or quote-status operation exists.
   humanURL: https://duuo.ca/embedded-partners/
   tags:
+  - Embedded Insurance
+  - Quotes
+  - Policy
+  - Tenant Insurance
+  - Event Insurance
+  - Partner API
+  tags_raw:
   - Embedded Insurance
   - Quote
   - Policy
