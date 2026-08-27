@@ -45,44 +45,19 @@ created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'
 apis:
-- aid: cooperators:duuo-platform-api
-  name: Duuo Platform API
+- aid: cooperators:cooperators-event-insurance-api
+  name: The Co-operators Event Insurance API
   description: >-
-    Partner-gated embedded insurance API from Duuo, the digital insurance brand of The Co-operators.
-    Duuo's own published documentation describes APIs for account, quote and policy, risk rating and
-    payment so partners can embed tenant and event insurance into their own applications. Access is not
-    self-serve: partners engage the Duuo partnerships team, sign a partnership agreement, are assigned a
-    Partner Account Manager, and are then issued API access credentials, a partner-specific host and the
-    detailed API reference. Authentication is OAuth 2.0 client_credentials, with the client id and secret
-    supplied as an HTTP Basic header to a partner-issued token URL and the resulting bearer token sent on
-    every call. The publicly published operations covered quote and bind/issue for two products — event
-    insurance (create entity, create quote, get quote, make payment, create policy, email policy) and
-    tenant insurance (check eligibility, update quote, add insured, make payment) — with no claims or
-    FNOL surface. The developer portal Duuo links to from duuo.ca, https://developer.duuo.ca/, is a
-    Postman-hosted documentation domain that returned HTTP 404 on 2026-07-25; the collection it published
-    has been unpublished, so no live public reference remains. The OpenAPI 3.1 in this repo is a
-    derivation by API Evangelist from an Internet Archive capture of that same Duuo-published Postman
-    collection — ten operations across two strictly ordered product flows, with Duuo's own request and
-    response examples, error shapes and Partner Accepted Testing values carried through. It is a
-    historical, non-live-verified reconstruction, not a provider-published spec. Consent booleans are
-    load-bearing request fields on both flows, there is no idempotency key on the money- and
-    policy-binding writes, and no webhook, claims, policy-read or quote-status operation exists.
+    Quote and bind Duuo event insurance. Ordered flow — create entity, create quote, get quote, make payment.
+    With bindOnPayment=true (the default for API partners) the policy is created and emailed automatically
+    on successful payment; with bindOnPayment=false the partner must also call Create Policy and Email
+    Policy.
   humanURL: https://duuo.ca/embedded-partners/
   tags:
-  - Embedded Insurance
-  - Quotes
-  - Policy
-  - Tenant Insurance
   - Event Insurance
-  - Partner API
-  tags_raw:
-  - Embedded Insurance
-  - Quote
-  - Policy
-  - Tenant Insurance
-  - Event Insurance
-  - Partner API
   properties:
+  - type: OpenAPI
+    url: openapi/cooperators-event-insurance-api-openapi.yml
   - type: Documentation
     url: https://duuo.ca/embedded-partners/
   - type: Website
@@ -91,21 +66,14 @@ apis:
     url: https://duuo.ca/new-partners/
   - type: GettingStarted
     url: https://duuo.ca/embedded-partners/
-    name: Duuo partner onboarding — discovery, agreement, credentials, build, test, compliance review, go live
   - type: Support
     url: https://intercom.help/duuo-support/en/
-    name: Duuo help centre
   - type: TermsOfService
     url: https://duuo.ca/terms-of-use
   - type: PrivacyPolicy
     url: https://duuo.ca/privacy
   - type: Blog
     url: https://duuo.ca/blog/
-  - type: OpenAPI
-    url: openapi/cooperators-duuo-platform-openapi.yml
-    name: Duuo Platform API (OpenAPI 3.1, derived from Duuo's archived published Postman collection — not live-verified)
-  - type: Overlay
-    url: overlays/cooperators-duuo-platform-overlay.yaml
   - type: Authentication
     url: authentication/cooperators-authentication.yml
   - type: Conventions
@@ -116,26 +84,69 @@ apis:
     url: data-model/cooperators-data-model.yml
   - type: Sandbox
     url: sandbox/cooperators-sandbox.yml
-    name: Partner Accepted Testing (PAT) environment and published test cards — credentials issued by a Partner Account Manager, not self-serve
   - type: Lifecycle
     url: lifecycle/cooperators-lifecycle.yml
   - type: Conformance
     url: conformance/cooperators-conformance.yml
   - type: AgenticAccess
     url: agentic-access/cooperators-agentic-access.yml
-  - type: MCPServer
-    url: mcp/cooperators-mcp.yml
-    name: Duuo Platform MCP tool surface (CANDIDATE — derived from the OpenAPI, NOT published or hosted by the provider)
-  - type: AgentSkill
-    url: skills/_index.yml
-    name: Agent skills for the two Duuo quote-and-bind flows
   - type: Arazzo
     url: arazzo/cooperators-event-insurance-quote-and-bind.yml
-    name: Duuo event insurance — quote and bind
   - type: Arazzo
     url: arazzo/cooperators-tenant-insurance-quote-and-bind.yml
-    name: Duuo tenant insurance — quote and bind
+- aid: cooperators:cooperators-tenant-insurance-api
+  name: The Co-operators Tenant Insurance API
+  description: >-
+    Quote and bind Duuo tenant (renters) insurance. Ordered flow — check eligibility, update quote, add
+    insured, make payment. Duuo notes that Get Quote Status and Get Policies were documented as "to be
+    released at a later date" and are not part of this surface.
+  humanURL: https://duuo.ca/embedded-partners/
+  tags:
+  - Tenant Insurance
+  properties:
+  - type: OpenAPI
+    url: openapi/cooperators-tenant-insurance-api-openapi.yml
+  - type: Documentation
+    url: https://duuo.ca/embedded-partners/
+  - type: Website
+    url: https://duuo.ca/
+  - type: SignUp
+    url: https://duuo.ca/new-partners/
+  - type: GettingStarted
+    url: https://duuo.ca/embedded-partners/
+  - type: Support
+    url: https://intercom.help/duuo-support/en/
+  - type: TermsOfService
+    url: https://duuo.ca/terms-of-use
+  - type: PrivacyPolicy
+    url: https://duuo.ca/privacy
+  - type: Blog
+    url: https://duuo.ca/blog/
+  - type: Authentication
+    url: authentication/cooperators-authentication.yml
+  - type: Conventions
+    url: conventions/cooperators-conventions.yml
+  - type: ErrorCatalog
+    url: errors/cooperators-problem-types.yml
+  - type: DataModel
+    url: data-model/cooperators-data-model.yml
+  - type: Sandbox
+    url: sandbox/cooperators-sandbox.yml
+  - type: Lifecycle
+    url: lifecycle/cooperators-lifecycle.yml
+  - type: Conformance
+    url: conformance/cooperators-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/cooperators-agentic-access.yml
+  - type: Arazzo
+    url: arazzo/cooperators-event-insurance-quote-and-bind.yml
+  - type: Arazzo
+    url: arazzo/cooperators-tenant-insurance-quote-and-bind.yml
 common:
+- type: Overlay
+  url: overlays/cooperators-duuo-platform-overlay.yaml
+- type: MCPServer
+  url: mcp/cooperators-mcp.yml
 - type: AgenticAccess
   url: agentic-access/cooperators-agentic-access.yml
 - type: Authentication
