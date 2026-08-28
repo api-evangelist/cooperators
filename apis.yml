@@ -20,6 +20,18 @@ description: >-
   partnership agreement and issued OAuth 2.0 client credentials; the developer portal Duuo advertises
   at developer.duuo.ca is a Postman-hosted documentation domain that returns HTTP 404 as of 2026-07-25.
   No ACORD, AL3 or CSIO reference was found anywhere in the company's public materials.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
 - Insurance
