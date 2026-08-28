@@ -8,110 +8,110 @@ info:
     bindOnPayment true the policy is bound and emailed on successful payment, so this workflow ends
     at the redirect. Seed inputs from sandbox/cooperators-sandbox.yml (Partner Accepted Testing).
 sourceDescriptions:
-  - name: duuo
-    url: ../openapi/cooperators-duuo-platform-openapi.yml
-    type: openapi
+- name: eventInsuranceApi
+  url: ../openapi/cooperators-event-insurance-api-openapi.yml
+  type: openapi
 workflows:
-  - workflowId: duuo-event-quote-and-bind
-    summary: Create an entity, quote an event, display the quote, and redirect to payment.
+- workflowId: duuo-event-quote-and-bind
+  summary: Create an entity, quote an event, display the quote, and redirect to payment.
+  description: >-
+    Duuo states the event operations must be executed in this order or they will error. The
+    payment step moves money and binds a policy; there is no idempotency key, so it must not be
+    retried blindly.
+  inputs:
+    type: object
+    required: [firstName, lastName, email, eventTypeLabel, dayFactor, eventAlcoholServed, numberAttendees, eventInsurance, eventProvince, eventAddress]
+    properties:
+      firstName: {type: string}
+      lastName: {type: string}
+      email: {type: string, format: email}
+      province: {type: string}
+      phone: {type: string}
+      eventTypeLabel: {type: string, description: One of Duuo's closed non-sporting or sporting event lists.}
+      eventSingleOrMultiple: {type: string, enum: [singleEvent, multipleEvent]}
+      eventStartDate: {type: string}
+      eventEndDate: {type: string}
+      eventProvince: {type: string, enum: [AB, BC, MB, NB, NL, NS, ON, PE, SK]}
+      eventInsurance: {type: number, description: Days; 1-7 for singleEvent, 2-75 for multipleEvent.: null}
+      dayFactor: {type: string, enum: ['<2 Hours per Day', '>2 Hours per Day']}
+      numberAttendees: {type: string}
+      eventAlcoholServed: {type: string, enum: ['Yes', 'No']}
+      eventName: {type: string}
+      eventAddress: {type: array, description: Duuo address/venue objects, including coiRecipient.: null}
+  steps:
+  - stepId: create-entity
+    description: Create the insured party with Duuo from identity data the partner already holds.
+    operationId: createEventEntity
+    requestBody:
+      contentType: application/json
+      payload:
+        firstName: $inputs.firstName
+        lastName: $inputs.lastName
+        email: $inputs.email
+        province: $inputs.province
+        phone: $inputs.phone
+        language: en_US
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: create-quote
     description: >-
-      Duuo states the event operations must be executed in this order or they will error. The
-      payment step moves money and binds a policy; there is no idempotency key, so it must not be
-      retried blindly.
-    inputs:
-      type: object
-      required: [firstName, lastName, email, eventTypeLabel, dayFactor, eventAlcoholServed, numberAttendees, eventInsurance, eventProvince, eventAddress]
-      properties:
-        firstName: {type: string}
-        lastName: {type: string}
-        email: {type: string, format: email}
-        province: {type: string}
-        phone: {type: string}
-        eventTypeLabel: {type: string, description: One of Duuo's closed non-sporting or sporting event lists.}
-        eventSingleOrMultiple: {type: string, enum: [singleEvent, multipleEvent]}
-        eventStartDate: {type: string}
-        eventEndDate: {type: string}
-        eventProvince: {type: string, enum: [AB, BC, MB, NB, NL, NS, ON, PE, SK]}
-        eventInsurance: {type: number, description: Days; 1-7 for singleEvent, 2-75 for multipleEvent.}
-        dayFactor: {type: string, enum: ['<2 Hours per Day', '>2 Hours per Day']}
-        numberAttendees: {type: string}
-        eventAlcoholServed: {type: string, enum: ['Yes', 'No']}
-        eventName: {type: string}
-        eventAddress: {type: array, description: Duuo address/venue objects, including coiRecipient.}
-    steps:
-      - stepId: create-entity
-        description: Create the insured party with Duuo from identity data the partner already holds.
-        operationId: createEventEntity
-        requestBody:
-          contentType: application/json
-          payload:
-            firstName: $inputs.firstName
-            lastName: $inputs.lastName
-            email: $inputs.email
-            province: $inputs.province
-            phone: $inputs.phone
-            language: en_US
-        successCriteria:
-          - condition: $statusCode == 200
-      - stepId: create-quote
-        description: >-
-          Price the event. The excluded-activities list must have been shown and acknowledged
-          before this step in any real integration.
-        operationId: createEventQuote
-        requestBody:
-          contentType: application/json
-          payload:
-            entityEmail: $inputs.email
-            eventTypeLabel: $inputs.eventTypeLabel
-            eventSingleOrMultiple: $inputs.eventSingleOrMultiple
-            eventStartDate: $inputs.eventStartDate
-            eventEndDate: $inputs.eventEndDate
-            eventProvince: $inputs.eventProvince
-            eventInsurance: $inputs.eventInsurance
-            dayFactor: $inputs.dayFactor
-            numberAttendees: $inputs.numberAttendees
-            eventAlcoholServed: $inputs.eventAlcoholServed
-            eventName: $inputs.eventName
-            address: $inputs.eventAddress
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          quoteId: $response.body#/data/resolved/response/quoteId
-          premium: $response.body#/data/resolved/response/premium
-          salesTax: $response.body#/data/resolved/response/salesTax
-          totalCost: $response.body#/data/resolved/response/totalCost
-      - stepId: get-quote
-        description: >-
-          Retrieve the quote for display. The price, event details, coverage limits, policy-wording
-          link and misrepresentation disclaimer must all be on screen.
-        operationId: getEventQuote
-        parameters:
-          - name: quoteId
-            in: path
-            value: $steps.create-quote.outputs.quoteId
-        successCriteria:
-          - condition: $statusCode == 200
-      - stepId: make-payment
-        description: >-
-          Generate the Duuo-hosted payment redirect. generalConsent and emailConsent must have been
-          collected from the customer with Duuo's verbatim check-box text. Money-moving and
-          policy-binding; not idempotent.
-        operationId: createEventQuotePayment
-        parameters:
-          - name: quoteId
-            in: path
-            value: $steps.create-quote.outputs.quoteId
-        requestBody:
-          contentType: application/json
-          payload:
-            bindOnPayment: true
-            generalConsent: true
-            emailConsent: true
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          paymentUrl: $response.body#/data/resolved/response/url
+      Price the event. The excluded-activities list must have been shown and acknowledged
+      before this step in any real integration.
+    operationId: createEventQuote
+    requestBody:
+      contentType: application/json
+      payload:
+        entityEmail: $inputs.email
+        eventTypeLabel: $inputs.eventTypeLabel
+        eventSingleOrMultiple: $inputs.eventSingleOrMultiple
+        eventStartDate: $inputs.eventStartDate
+        eventEndDate: $inputs.eventEndDate
+        eventProvince: $inputs.eventProvince
+        eventInsurance: $inputs.eventInsurance
+        dayFactor: $inputs.dayFactor
+        numberAttendees: $inputs.numberAttendees
+        eventAlcoholServed: $inputs.eventAlcoholServed
+        eventName: $inputs.eventName
+        address: $inputs.eventAddress
+    successCriteria:
+    - condition: $statusCode == 200
     outputs:
-      quoteId: $steps.create-quote.outputs.quoteId
-      totalCost: $steps.create-quote.outputs.totalCost
-      paymentUrl: $steps.make-payment.outputs.paymentUrl
+      quoteId: $response.body#/data/resolved/response/quoteId
+      premium: $response.body#/data/resolved/response/premium
+      salesTax: $response.body#/data/resolved/response/salesTax
+      totalCost: $response.body#/data/resolved/response/totalCost
+  - stepId: get-quote
+    description: >-
+      Retrieve the quote for display. The price, event details, coverage limits, policy-wording
+      link and misrepresentation disclaimer must all be on screen.
+    operationId: getEventQuote
+    parameters:
+    - name: quoteId
+      in: path
+      value: $steps.create-quote.outputs.quoteId
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: make-payment
+    description: >-
+      Generate the Duuo-hosted payment redirect. generalConsent and emailConsent must have been
+      collected from the customer with Duuo's verbatim check-box text. Money-moving and
+      policy-binding; not idempotent.
+    operationId: createEventQuotePayment
+    parameters:
+    - name: quoteId
+      in: path
+      value: $steps.create-quote.outputs.quoteId
+    requestBody:
+      contentType: application/json
+      payload:
+        bindOnPayment: true
+        generalConsent: true
+        emailConsent: true
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      paymentUrl: $response.body#/data/resolved/response/url
+  outputs:
+    quoteId: $steps.create-quote.outputs.quoteId
+    totalCost: $steps.create-quote.outputs.totalCost
+    paymentUrl: $steps.make-payment.outputs.paymentUrl
