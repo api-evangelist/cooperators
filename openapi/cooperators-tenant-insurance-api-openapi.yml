@@ -3,19 +3,7 @@ info:
   title: Duuo Platform Tenant Insurance API
   version: '1.0'
   summary: Partner-gated embedded insurance API for Duuo, the digital insurance brand of The Co-operators.
-  description: 'Machine-readable reconstruction of the Duuo Platform API — the partner-gated embedded insurance API of Duuo Insurance Services Inc., the digital brand of The Co-operators, whose products are underwritten by Co-operators General Insurance Company.
-
-
-    PROVENANCE: this document was DERIVED, operation for operation, from Duuo''s own published developer-portal Postman collection ("Developer Portal", collection id 26639007, publish id 2s93sXcubU), retrieved from the Internet Archive capture of https://developer.duuo.ca/api/collections/26639007/2s93sXcubU (capture 2024-01-27, last live archived snapshot 2026-02-06). The live portal at https://developer.duuo.ca/ returns HTTP 404 as of 2026-07-25 — the collection has been unpublished — so nothing here is live-verified. Every path, method, parameter, request field, response field, example and error shape below is taken verbatim from that published collection. Nothing has been invented. Duuo states that "more detailed API reference documentation" is delivered to partners during onboarding, so this is a floor on the real surface, not a ceiling.
-
-
-    ACCESS: not self-serve. Partners run a discovery call with the Duuo partnerships team, sign a partnership agreement, are assigned a Partner Account Manager, and are then issued API access credentials plus a partner-specific host. A compliance review of the integration is required before go-live.
-
-
-    ORDERING: Duuo documents both product flows as strictly ordered — "The Event API''s must be executed in the order outlined below. Failure to follow the specified order of API''s for this product will result in error." The same note applies to the tenant flow.
-
-
-    COMPLIANCE: insurance is a regulated industry in Canada. Duuo''s collection carries a binding compliance guide — required consent text, required disclaimers, a required licensed-representative support redirect, and required Duuo attribution and logo on every screen where coverage is discussed — and states that non-compliance may result in access termination.'
+  description: Machine-readable reconstruction of the Duuo Platform API — the partner-gated embedded insurance API of Duuo Insurance Services Inc., the digital brand of The Co-operators, whose products are underwritten by Co-operators General Insurance Company.
   contact:
     name: Duuo Partnerships
     url: https://duuo.ca/new-partners/
@@ -249,7 +237,114 @@ paths:
         '404':
           $ref: '#/components/responses/TenantNotFound'
 components:
+  responses:
+    TenantAccessDenied:
+      description: Access denied — requires access management.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: '403'
+                response: error
+                responseDetails: Access denied.
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+    TenantNotFound:
+      description: Route or module not found. Returned as the plain-text body "Module not found".
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: Module not found
+    TenantBadRequest:
+      description: Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: 400
+                response: Bad Request
+                responseDetails:
+                - field: personalInfoConsent
+                  message: The personal information consent field is required.
+                  statusReferenceId: dpTenApiStatus400_008
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+    TenantUnprocessable:
+      description: Unprocessable entity.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: '422'
+                response: Error
+                responseDetails: Unprocessable Entity
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
   schemas:
+    TenantAddInsuredRequest:
+      type: object
+      required:
+      - packageSelection
+      - paymentFrequency
+      - paymentMethod
+      - languageLocal
+      - thirdPartySharingConsent
+      properties:
+        packageSelection:
+          type: string
+          description: Package selection.
+          enum:
+          - premium
+          - standard
+        paymentFrequency:
+          type: string
+          description: Payment frequency.
+          enum:
+          - monthly
+          - annually
+        paymentMethod:
+          type: string
+          description: Payment method to be used.
+          enum:
+          - credit
+        languageLocal:
+          type: string
+          description: ISO language code. Defaults to en-US.
+        landlordFirstName:
+          type: string
+        landlordLastName:
+          type: string
+        landlordEmailAddress:
+          type: string
+          format: email
+        firstAdditionalInsuredFirstName:
+          type: string
+        firstAdditionalInsuredLastName:
+          type: string
+        secondAdditionalInsuredFirstName:
+          type: string
+        secondAdditionalInsuredLastName:
+          type: string
+        thirdAdditionalInsuredFirstName:
+          type: string
+        thirdAdditionalInsuredLastName:
+          type: string
+        thirdPartySharingConsent:
+          type: boolean
+          description: Customer permits Duuo to send the proof of insurance to appropriate third parties such as a landlord, and to notify them if the policy is cancelled. Must be true for the call to succeed.
     TenantQuoteUpdateRequest:
       type: object
       required:
@@ -351,98 +446,6 @@ components:
           - '2000'
           - '3000'
           - '5000'
-    TenantAddInsuredRequest:
-      type: object
-      required:
-      - packageSelection
-      - paymentFrequency
-      - paymentMethod
-      - languageLocal
-      - thirdPartySharingConsent
-      properties:
-        packageSelection:
-          type: string
-          description: Package selection.
-          enum:
-          - premium
-          - standard
-        paymentFrequency:
-          type: string
-          description: Payment frequency.
-          enum:
-          - monthly
-          - annually
-        paymentMethod:
-          type: string
-          description: Payment method to be used.
-          enum:
-          - credit
-        languageLocal:
-          type: string
-          description: ISO language code. Defaults to en-US.
-        landlordFirstName:
-          type: string
-        landlordLastName:
-          type: string
-        landlordEmailAddress:
-          type: string
-          format: email
-        firstAdditionalInsuredFirstName:
-          type: string
-        firstAdditionalInsuredLastName:
-          type: string
-        secondAdditionalInsuredFirstName:
-          type: string
-        secondAdditionalInsuredLastName:
-          type: string
-        thirdAdditionalInsuredFirstName:
-          type: string
-        thirdAdditionalInsuredLastName:
-          type: string
-        thirdPartySharingConsent:
-          type: boolean
-          description: Customer permits Duuo to send the proof of insurance to appropriate third parties such as a landlord, and to notify them if the policy is cancelled. Must be true for the call to succeed.
-    TenantFieldError:
-      type: object
-      description: One field-level validation error.
-      properties:
-        field:
-          type: string
-          description: The request field that failed validation.
-        message:
-          type: string
-          description: Human-readable message.
-        statusReferenceId:
-          type: string
-          description: Duuo status reference id, for example dpTenApiStatus400_008.
-    TenantEnvelope:
-      type: object
-      description: Duuo platform response envelope for the tenant product. The payload sits at data.resolved.message, with the code at data.resolved.status. Every success carries a statusReferenceId (for example dpTenApiStatus200_001) for support correlation.
-      properties:
-        data:
-          type: object
-          properties:
-            resolved:
-              type: object
-              properties:
-                message:
-                  type: object
-                  additionalProperties: true
-                status:
-                  type: string
-        metadata:
-          type: object
-          additionalProperties: true
-        validationErrors:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        invalidNavigationPanels:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
     TenantEligibilityRequest:
       type: object
       required:
@@ -512,6 +515,47 @@ components:
           items:
             type: object
             additionalProperties: true
+    TenantEnvelope:
+      type: object
+      description: Duuo platform response envelope for the tenant product. The payload sits at data.resolved.message, with the code at data.resolved.status. Every success carries a statusReferenceId (for example dpTenApiStatus200_001) for support correlation.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                message:
+                  type: object
+                  additionalProperties: true
+                status:
+                  type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    TenantFieldError:
+      type: object
+      description: One field-level validation error.
+      properties:
+        field:
+          type: string
+          description: The request field that failed validation.
+        message:
+          type: string
+          description: Human-readable message.
+        statusReferenceId:
+          type: string
+          description: Duuo status reference id, for example dpTenApiStatus400_008.
     TenantPaymentRequest:
       type: object
       required:
@@ -534,62 +578,6 @@ components:
         type: string
         examples:
         - 64cab1966825d1f3bc64bb18
-  responses:
-    TenantUnprocessable:
-      description: Unprocessable entity.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TenantErrorEnvelope'
-          example:
-            data:
-              resolved:
-                status: '422'
-                response: Error
-                responseDetails: Unprocessable Entity
-            metadata: {}
-            validationErrors: []
-            invalidNavigationPanels: []
-    TenantNotFound:
-      description: Route or module not found. Returned as the plain-text body "Module not found".
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: Module not found
-    TenantAccessDenied:
-      description: Access denied — requires access management.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TenantErrorEnvelope'
-          example:
-            data:
-              resolved:
-                status: '403'
-                response: error
-                responseDetails: Access denied.
-            metadata: {}
-            validationErrors: []
-            invalidNavigationPanels: []
-    TenantBadRequest:
-      description: Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TenantErrorEnvelope'
-          example:
-            data:
-              resolved:
-                status: 400
-                response: Bad Request
-                responseDetails:
-                - field: personalInfoConsent
-                  message: The personal information consent field is required.
-                  statusReferenceId: dpTenApiStatus400_008
-            metadata: {}
-            validationErrors: []
-            invalidNavigationPanels: []
   securitySchemes:
     duuoBearer:
       type: http

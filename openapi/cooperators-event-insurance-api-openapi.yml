@@ -3,19 +3,7 @@ info:
   title: Duuo Platform Event Insurance API
   version: '1.0'
   summary: Partner-gated embedded insurance API for Duuo, the digital insurance brand of The Co-operators.
-  description: 'Machine-readable reconstruction of the Duuo Platform API — the partner-gated embedded insurance API of Duuo Insurance Services Inc., the digital brand of The Co-operators, whose products are underwritten by Co-operators General Insurance Company.
-
-
-    PROVENANCE: this document was DERIVED, operation for operation, from Duuo''s own published developer-portal Postman collection ("Developer Portal", collection id 26639007, publish id 2s93sXcubU), retrieved from the Internet Archive capture of https://developer.duuo.ca/api/collections/26639007/2s93sXcubU (capture 2024-01-27, last live archived snapshot 2026-02-06). The live portal at https://developer.duuo.ca/ returns HTTP 404 as of 2026-07-25 — the collection has been unpublished — so nothing here is live-verified. Every path, method, parameter, request field, response field, example and error shape below is taken verbatim from that published collection. Nothing has been invented. Duuo states that "more detailed API reference documentation" is delivered to partners during onboarding, so this is a floor on the real surface, not a ceiling.
-
-
-    ACCESS: not self-serve. Partners run a discovery call with the Duuo partnerships team, sign a partnership agreement, are assigned a Partner Account Manager, and are then issued API access credentials plus a partner-specific host. A compliance review of the integration is required before go-live.
-
-
-    ORDERING: Duuo documents both product flows as strictly ordered — "The Event API''s must be executed in the order outlined below. Failure to follow the specified order of API''s for this product will result in error." The same note applies to the tenant flow.
-
-
-    COMPLIANCE: insurance is a regulated industry in Canada. Duuo''s collection carries a binding compliance guide — required consent text, required disclaimers, a required licensed-representative support redirect, and required Duuo attribution and logo on every screen where coverage is discussed — and states that non-compliance may result in access termination.'
+  description: Machine-readable reconstruction of the Duuo Platform API — the partner-gated embedded insurance API of Duuo Insurance Services Inc., the digital brand of The Co-operators, whose products are underwritten by Co-operators General Insurance Company.
   contact:
     name: Duuo Partnerships
     url: https://duuo.ca/new-partners/
@@ -332,36 +320,14 @@ paths:
                 $ref: '#/components/schemas/EventEnvelope'
 components:
   schemas:
-    EventEnvelope:
+    EventAdditionalInsured:
       type: object
-      description: Duuo platform response envelope for the event product. The payload sits at data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
       properties:
-        data:
-          type: object
-          properties:
-            resolved:
-              type: object
-              properties:
-                response:
-                  type: object
-                  description: Operation payload. Always carries a "response" status string on success.
-                  additionalProperties: true
-                responseCode:
-                  type: string
-                  description: 200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific 500 meaning varies by operation).
-        metadata:
-          type: object
-          additionalProperties: true
-        validationErrors:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        invalidNavigationPanels:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
+        additionalInsuredNameOrEntity:
+          type: string
+        additionalInsuredEmail:
+          type: string
+          format: email
     EventAddress:
       type: object
       properties:
@@ -379,22 +345,6 @@ components:
           type: string
           format: email
           description: Recipient of the certificate of insurance for this venue.
-    EventPaymentRequest:
-      type: object
-      required:
-      - bindOnPayment
-      - generalConsent
-      - emailConsent
-      properties:
-        bindOnPayment:
-          type: boolean
-          description: When true, the policy is bound and issued after payment completes. True is the default flow for API partners.
-        generalConsent:
-          type: boolean
-          description: Customer agrees to the terms of use and to the collection of their personal information. Must be true for the call to succeed.
-        emailConsent:
-          type: boolean
-          description: Customer agrees to Duuo sharing the certificate of insurance with third parties on their behalf. Must be true for the call to succeed.
     EventEntityRequest:
       type: object
       required:
@@ -426,6 +376,68 @@ components:
           description: ISO language code. Defaults to en_US.
           enum:
           - en_US
+    EventPolicyRequest:
+      type: object
+      required:
+      - quoteId
+      properties:
+        quoteId:
+          type: string
+          description: ID of the quote to create a policy from.
+    EventPaymentRequest:
+      type: object
+      required:
+      - bindOnPayment
+      - generalConsent
+      - emailConsent
+      properties:
+        bindOnPayment:
+          type: boolean
+          description: When true, the policy is bound and issued after payment completes. True is the default flow for API partners.
+        generalConsent:
+          type: boolean
+          description: Customer agrees to the terms of use and to the collection of their personal information. Must be true for the call to succeed.
+        emailConsent:
+          type: boolean
+          description: Customer agrees to Duuo sharing the certificate of insurance with third parties on their behalf. Must be true for the call to succeed.
+    EventCoHost:
+      type: object
+      properties:
+        cohostNameOrEntity:
+          type: string
+        cohostEmail:
+          type: string
+          format: email
+    EventEnvelope:
+      type: object
+      description: Duuo platform response envelope for the event product. The payload sits at data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                response:
+                  type: object
+                  description: Operation payload. Always carries a "response" status string on success.
+                  additionalProperties: true
+                responseCode:
+                  type: string
+                  description: 200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific 500 meaning varies by operation).
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
     EventQuoteRequest:
       type: object
       required:
@@ -505,40 +517,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventAdditionalInsured'
-    EventCoHost:
-      type: object
-      properties:
-        cohostNameOrEntity:
-          type: string
-        cohostEmail:
-          type: string
-          format: email
-    EventPolicyRequest:
-      type: object
-      required:
-      - quoteId
-      properties:
-        quoteId:
-          type: string
-          description: ID of the quote to create a policy from.
-    EventAdditionalInsured:
-      type: object
-      properties:
-        additionalInsuredNameOrEntity:
-          type: string
-        additionalInsuredEmail:
-          type: string
-          format: email
   parameters:
-    PolicyId:
-      name: policyId
-      in: path
-      required: true
-      description: The internal policy id used for process mapping. This is not the customer-facing policy number.
-      schema:
-        type: string
-        examples:
-        - 645a7535e27d0a35d355a19b6
     QuoteId:
       name: quoteId
       in: path
@@ -548,15 +527,24 @@ components:
         type: string
         examples:
         - 646d01fa4a5918a3df63fb58
+    PolicyId:
+      name: policyId
+      in: path
+      required: true
+      description: The internal policy id used for process mapping. This is not the customer-facing policy number.
+      schema:
+        type: string
+        examples:
+        - 645a7535e27d0a35d355a19b6
   responses:
-    EventLoginTimeout:
-      description: Login timeout.
+    EventAccessForbidden:
+      description: Access forbidden.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/EventEnvelope'
-    EventAccessForbidden:
-      description: Access forbidden.
+    EventLoginTimeout:
+      description: Login timeout.
       content:
         application/json:
           schema:
