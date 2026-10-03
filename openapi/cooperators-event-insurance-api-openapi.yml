@@ -55,7 +55,7 @@ paths:
               name: First and Last
               email: test@gmail.com
               phone: '1212121212'
-              province: true
+              province: 'ON'
               language: en_US
       responses:
         '200':
@@ -102,7 +102,7 @@ paths:
               eventSingleOrMultiple: singleEvent
               eventStartDate: 2023-03-01 || 4:30 pm
               eventEndDate: 2023-03-05 || 5:30 pm
-              eventProvince: true
+              eventProvince: 'ON'
               eventInsurance: 4
               dayFactor: '>2 Hours per Day'
               numberAttendees: 25 or Less
@@ -320,6 +320,93 @@ paths:
                 $ref: '#/components/schemas/EventEnvelope'
 components:
   schemas:
+    EventEnvelope:
+      type: object
+      description: Duuo platform response envelope for the event product. The payload sits at data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                response:
+                  type: object
+                  description: Operation payload. Always carries a "response" status string on success.
+                  additionalProperties: true
+                responseCode:
+                  type: string
+                  description: 200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific 500 meaning varies by operation).
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    EventCoHost:
+      type: object
+      properties:
+        cohostNameOrEntity:
+          type: string
+        cohostEmail:
+          type: string
+          format: email
+    EventAddress:
+      type: object
+      properties:
+        eventAddress:
+          type: string
+        venueName:
+          type: string
+        venueAddress:
+          type: string
+        venueCity:
+          type: string
+        venuePostalCode:
+          type: string
+        coiRecipient:
+          type: string
+          format: email
+          description: Recipient of the certificate of insurance for this venue.
+    EventPolicyRequest:
+      type: object
+      required:
+      - quoteId
+      properties:
+        quoteId:
+          type: string
+          description: ID of the quote to create a policy from.
+    EventPaymentRequest:
+      type: object
+      required:
+      - bindOnPayment
+      - generalConsent
+      - emailConsent
+      properties:
+        bindOnPayment:
+          type: boolean
+          description: When true, the policy is bound and issued after payment completes. True is the default flow for API partners.
+        generalConsent:
+          type: boolean
+          description: Customer agrees to the terms of use and to the collection of their personal information. Must be true for the call to succeed.
+        emailConsent:
+          type: boolean
+          description: Customer agrees to Duuo sharing the certificate of insurance with third parties on their behalf. Must be true for the call to succeed.
+    EventAdditionalInsured:
+      type: object
+      properties:
+        additionalInsuredNameOrEntity:
+          type: string
+        additionalInsuredEmail:
+          type: string
+          format: email
     EventEntityRequest:
       type: object
       required:
@@ -351,93 +438,6 @@ components:
           description: ISO language code. Defaults to en_US.
           enum:
           - en_US
-    EventAdditionalInsured:
-      type: object
-      properties:
-        additionalInsuredNameOrEntity:
-          type: string
-        additionalInsuredEmail:
-          type: string
-          format: email
-    EventCoHost:
-      type: object
-      properties:
-        cohostNameOrEntity:
-          type: string
-        cohostEmail:
-          type: string
-          format: email
-    EventEnvelope:
-      type: object
-      description: Duuo platform response envelope for the event product. The payload sits at data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
-      properties:
-        data:
-          type: object
-          properties:
-            resolved:
-              type: object
-              properties:
-                response:
-                  type: object
-                  description: Operation payload. Always carries a "response" status string on success.
-                  additionalProperties: true
-                responseCode:
-                  type: string
-                  description: 200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific 500 meaning varies by operation).
-        metadata:
-          type: object
-          additionalProperties: true
-        validationErrors:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        invalidNavigationPanels:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-    EventPaymentRequest:
-      type: object
-      required:
-      - bindOnPayment
-      - generalConsent
-      - emailConsent
-      properties:
-        bindOnPayment:
-          type: boolean
-          description: When true, the policy is bound and issued after payment completes. True is the default flow for API partners.
-        generalConsent:
-          type: boolean
-          description: Customer agrees to the terms of use and to the collection of their personal information. Must be true for the call to succeed.
-        emailConsent:
-          type: boolean
-          description: Customer agrees to Duuo sharing the certificate of insurance with third parties on their behalf. Must be true for the call to succeed.
-    EventAddress:
-      type: object
-      properties:
-        eventAddress:
-          type: string
-        venueName:
-          type: string
-        venueAddress:
-          type: string
-        venueCity:
-          type: string
-        venuePostalCode:
-          type: string
-        coiRecipient:
-          type: string
-          format: email
-          description: Recipient of the certificate of insurance for this venue.
-    EventPolicyRequest:
-      type: object
-      required:
-      - quoteId
-      properties:
-        quoteId:
-          type: string
-          description: ID of the quote to create a policy from.
     EventQuoteRequest:
       type: object
       required:
@@ -484,7 +484,7 @@ components:
           - NB
           - NL
           - NS
-          - true
+          - 'ON'
           - PE
           - SK
         eventSingleOrMultiple:
@@ -517,19 +517,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventAdditionalInsured'
-  responses:
-    EventAccessForbidden:
-      description: Access forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/EventEnvelope'
-    EventLoginTimeout:
-      description: Login timeout.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/EventEnvelope'
   parameters:
     QuoteId:
       name: quoteId
@@ -549,6 +536,19 @@ components:
         type: string
         examples:
         - 645a7535e27d0a35d355a19b6
+  responses:
+    EventLoginTimeout:
+      description: Login timeout.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventEnvelope'
+    EventAccessForbidden:
+      description: Access forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventEnvelope'
   securitySchemes:
     duuoBearer:
       type: http
