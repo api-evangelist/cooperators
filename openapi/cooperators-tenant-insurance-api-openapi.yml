@@ -237,7 +237,154 @@ paths:
         '404':
           $ref: '#/components/responses/TenantNotFound'
 components:
+  parameters:
+    QuoteSubmissionId:
+      name: quoteSubmissionId
+      in: path
+      required: true
+      description: The quoteSubmissionId returned by Check Eligibility.
+      schema:
+        type: string
+        examples:
+        - 64cab1966825d1f3bc64bb18
+  responses:
+    TenantNotFound:
+      description: Route or module not found. Returned as the plain-text body "Module not found".
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: Module not found
+    TenantBadRequest:
+      description: Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: 400
+                response: Bad Request
+                responseDetails:
+                - field: personalInfoConsent
+                  message: The personal information consent field is required.
+                  statusReferenceId: dpTenApiStatus400_008
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+    TenantUnprocessable:
+      description: Unprocessable entity.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: '422'
+                response: Error
+                responseDetails: Unprocessable Entity
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
+    TenantAccessDenied:
+      description: Access denied — requires access management.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TenantErrorEnvelope'
+          example:
+            data:
+              resolved:
+                status: '403'
+                response: error
+                responseDetails: Access denied.
+            metadata: {}
+            validationErrors: []
+            invalidNavigationPanels: []
   schemas:
+    TenantEligibilityRequest:
+      type: object
+      required:
+      - personalInfoConsent
+      - creditScoreConsent
+      - contactInfoEmail
+      - insuredAddressPostalCode
+      properties:
+        personalInfoConsent:
+          type: boolean
+          description: Explicit consent to Duuo's personal-information disclosure. Must be captured on its own check box with Duuo's full required text, which cannot share a screen with other fields.
+        creditScoreConsent:
+          type: boolean
+          description: Explicit consent to a soft credit check. Must be captured on its own check box with Duuo's required text.
+        insuredAddressProvince:
+          type: string
+          enum:
+          - AB
+          - BC
+          - MB
+          - NB
+          - NS
+          - 'ON'
+          - PE
+          - SK
+        contactInfoEmail:
+          type: string
+          format: email
+        languageLocal:
+          type: string
+          description: ISO language code. Defaults to en_US.
+        insuredAddressPostalCode:
+          type: string
+          description: Postal code of the address to be insured, in "LNL NLN" format.
+    TenantErrorEnvelope:
+      type: object
+      description: Duuo platform error envelope for the tenant product.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                status:
+                  oneOf:
+                  - type: string
+                  - type: integer
+                response:
+                  type: string
+                responseDetails:
+                  oneOf:
+                  - type: string
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/TenantFieldError'
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    TenantPaymentRequest:
+      type: object
+      required:
+      - bindOnPayment
+      - paymentAndTermsOfUseConsent
+      properties:
+        bindOnPayment:
+          type: boolean
+          description: When true, binds and issues the policy after payment completes.
+        paymentAndTermsOfUseConsent:
+          type: boolean
+          description: Customer accepts the Duuo Terms of Use (https://duuo.ca/terms-of-use/) and the Payment Agreement (https://duuo.ca/payment-agreement/). Must be true for the call to succeed.
     TenantEnvelope:
       type: object
       description: Duuo platform response envelope for the tenant product. The payload sits at data.resolved.message, with the code at data.resolved.status. Every success carries a statusReferenceId (for example dpTenApiStatus200_001) for support correlation.
@@ -317,40 +464,19 @@ components:
         thirdPartySharingConsent:
           type: boolean
           description: Customer permits Duuo to send the proof of insurance to appropriate third parties such as a landlord, and to notify them if the policy is cancelled. Must be true for the call to succeed.
-    TenantEligibilityRequest:
+    TenantFieldError:
       type: object
-      required:
-      - personalInfoConsent
-      - creditScoreConsent
-      - contactInfoEmail
-      - insuredAddressPostalCode
+      description: One field-level validation error.
       properties:
-        personalInfoConsent:
-          type: boolean
-          description: Explicit consent to Duuo's personal-information disclosure. Must be captured on its own check box with Duuo's full required text, which cannot share a screen with other fields.
-        creditScoreConsent:
-          type: boolean
-          description: Explicit consent to a soft credit check. Must be captured on its own check box with Duuo's required text.
-        insuredAddressProvince:
+        field:
           type: string
-          enum:
-          - AB
-          - BC
-          - MB
-          - NB
-          - NS
-          - 'ON'
-          - PE
-          - SK
-        contactInfoEmail:
+          description: The request field that failed validation.
+        message:
           type: string
-          format: email
-        languageLocal:
+          description: Human-readable message.
+        statusReferenceId:
           type: string
-          description: ISO language code. Defaults to en_US.
-        insuredAddressPostalCode:
-          type: string
-          description: Postal code of the address to be insured, in "LNL NLN" format.
+          description: Duuo status reference id, for example dpTenApiStatus400_008.
     TenantQuoteUpdateRequest:
       type: object
       required:
@@ -452,132 +578,6 @@ components:
           - '2000'
           - '3000'
           - '5000'
-    TenantErrorEnvelope:
-      type: object
-      description: Duuo platform error envelope for the tenant product.
-      properties:
-        data:
-          type: object
-          properties:
-            resolved:
-              type: object
-              properties:
-                status:
-                  oneOf:
-                  - type: string
-                  - type: integer
-                response:
-                  type: string
-                responseDetails:
-                  oneOf:
-                  - type: string
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/TenantFieldError'
-        metadata:
-          type: object
-          additionalProperties: true
-        validationErrors:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        invalidNavigationPanels:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-    TenantPaymentRequest:
-      type: object
-      required:
-      - bindOnPayment
-      - paymentAndTermsOfUseConsent
-      properties:
-        bindOnPayment:
-          type: boolean
-          description: When true, binds and issues the policy after payment completes.
-        paymentAndTermsOfUseConsent:
-          type: boolean
-          description: Customer accepts the Duuo Terms of Use (https://duuo.ca/terms-of-use/) and the Payment Agreement (https://duuo.ca/payment-agreement/). Must be true for the call to succeed.
-    TenantFieldError:
-      type: object
-      description: One field-level validation error.
-      properties:
-        field:
-          type: string
-          description: The request field that failed validation.
-        message:
-          type: string
-          description: Human-readable message.
-        statusReferenceId:
-          type: string
-          description: Duuo status reference id, for example dpTenApiStatus400_008.
-  responses:
-    TenantBadRequest:
-      description: Bad request. responseDetails is an array of field-level errors, each with the offending field, a human message, and a statusReferenceId.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TenantErrorEnvelope'
-          example:
-            data:
-              resolved:
-                status: 400
-                response: Bad Request
-                responseDetails:
-                - field: personalInfoConsent
-                  message: The personal information consent field is required.
-                  statusReferenceId: dpTenApiStatus400_008
-            metadata: {}
-            validationErrors: []
-            invalidNavigationPanels: []
-    TenantUnprocessable:
-      description: Unprocessable entity.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TenantErrorEnvelope'
-          example:
-            data:
-              resolved:
-                status: '422'
-                response: Error
-                responseDetails: Unprocessable Entity
-            metadata: {}
-            validationErrors: []
-            invalidNavigationPanels: []
-    TenantAccessDenied:
-      description: Access denied — requires access management.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TenantErrorEnvelope'
-          example:
-            data:
-              resolved:
-                status: '403'
-                response: error
-                responseDetails: Access denied.
-            metadata: {}
-            validationErrors: []
-            invalidNavigationPanels: []
-    TenantNotFound:
-      description: Route or module not found. Returned as the plain-text body "Module not found".
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: Module not found
-  parameters:
-    QuoteSubmissionId:
-      name: quoteSubmissionId
-      in: path
-      required: true
-      description: The quoteSubmissionId returned by Check Eligibility.
-      schema:
-        type: string
-        examples:
-        - 64cab1966825d1f3bc64bb18
   securitySchemes:
     duuoBearer:
       type: http

@@ -320,44 +320,6 @@ paths:
                 $ref: '#/components/schemas/EventEnvelope'
 components:
   schemas:
-    EventEnvelope:
-      type: object
-      description: Duuo platform response envelope for the event product. The payload sits at data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
-      properties:
-        data:
-          type: object
-          properties:
-            resolved:
-              type: object
-              properties:
-                response:
-                  type: object
-                  description: Operation payload. Always carries a "response" status string on success.
-                  additionalProperties: true
-                responseCode:
-                  type: string
-                  description: 200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific 500 meaning varies by operation).
-        metadata:
-          type: object
-          additionalProperties: true
-        validationErrors:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        invalidNavigationPanels:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-    EventCoHost:
-      type: object
-      properties:
-        cohostNameOrEntity:
-          type: string
-        cohostEmail:
-          type: string
-          format: email
     EventAddress:
       type: object
       properties:
@@ -375,38 +337,6 @@ components:
           type: string
           format: email
           description: Recipient of the certificate of insurance for this venue.
-    EventPolicyRequest:
-      type: object
-      required:
-      - quoteId
-      properties:
-        quoteId:
-          type: string
-          description: ID of the quote to create a policy from.
-    EventPaymentRequest:
-      type: object
-      required:
-      - bindOnPayment
-      - generalConsent
-      - emailConsent
-      properties:
-        bindOnPayment:
-          type: boolean
-          description: When true, the policy is bound and issued after payment completes. True is the default flow for API partners.
-        generalConsent:
-          type: boolean
-          description: Customer agrees to the terms of use and to the collection of their personal information. Must be true for the call to succeed.
-        emailConsent:
-          type: boolean
-          description: Customer agrees to Duuo sharing the certificate of insurance with third parties on their behalf. Must be true for the call to succeed.
-    EventAdditionalInsured:
-      type: object
-      properties:
-        additionalInsuredNameOrEntity:
-          type: string
-        additionalInsuredEmail:
-          type: string
-          format: email
     EventEntityRequest:
       type: object
       required:
@@ -517,25 +447,76 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventAdditionalInsured'
-  parameters:
-    QuoteId:
-      name: quoteId
-      in: path
-      required: true
-      description: The quote id received when an event quote was created.
-      schema:
-        type: string
-        examples:
-        - 646d01fa4a5918a3df63fb58
-    PolicyId:
-      name: policyId
-      in: path
-      required: true
-      description: The internal policy id used for process mapping. This is not the customer-facing policy number.
-      schema:
-        type: string
-        examples:
-        - 645a7535e27d0a35d355a19b6
+    EventEnvelope:
+      type: object
+      description: Duuo platform response envelope for the event product. The payload sits at data.resolved.response, with the HTTP-style code at data.resolved.responseCode.
+      properties:
+        data:
+          type: object
+          properties:
+            resolved:
+              type: object
+              properties:
+                response:
+                  type: object
+                  description: Operation payload. Always carries a "response" status string on success.
+                  additionalProperties: true
+                responseCode:
+                  type: string
+                  description: 200 Success, 401 Access forbidden, 440 Login timeout, 500 error (the specific 500 meaning varies by operation).
+        metadata:
+          type: object
+          additionalProperties: true
+        validationErrors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invalidNavigationPanels:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    EventPaymentRequest:
+      type: object
+      required:
+      - bindOnPayment
+      - generalConsent
+      - emailConsent
+      properties:
+        bindOnPayment:
+          type: boolean
+          description: When true, the policy is bound and issued after payment completes. True is the default flow for API partners.
+        generalConsent:
+          type: boolean
+          description: Customer agrees to the terms of use and to the collection of their personal information. Must be true for the call to succeed.
+        emailConsent:
+          type: boolean
+          description: Customer agrees to Duuo sharing the certificate of insurance with third parties on their behalf. Must be true for the call to succeed.
+    EventCoHost:
+      type: object
+      properties:
+        cohostNameOrEntity:
+          type: string
+        cohostEmail:
+          type: string
+          format: email
+    EventAdditionalInsured:
+      type: object
+      properties:
+        additionalInsuredNameOrEntity:
+          type: string
+        additionalInsuredEmail:
+          type: string
+          format: email
+    EventPolicyRequest:
+      type: object
+      required:
+      - quoteId
+      properties:
+        quoteId:
+          type: string
+          description: ID of the quote to create a policy from.
   responses:
     EventLoginTimeout:
       description: Login timeout.
@@ -549,6 +530,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/EventEnvelope'
+  parameters:
+    PolicyId:
+      name: policyId
+      in: path
+      required: true
+      description: The internal policy id used for process mapping. This is not the customer-facing policy number.
+      schema:
+        type: string
+        examples:
+        - 645a7535e27d0a35d355a19b6
+    QuoteId:
+      name: quoteId
+      in: path
+      required: true
+      description: The quote id received when an event quote was created.
+      schema:
+        type: string
+        examples:
+        - 646d01fa4a5918a3df63fb58
   securitySchemes:
     duuoBearer:
       type: http
