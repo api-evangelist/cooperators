@@ -1,4 +1,4 @@
-# The Co-operators (cooperators)
+# The Co-operators
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,76 +64,120 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The Co-operators is a Canadian insurance and financial services co-operative, formed in 1978 from the amalgamation of the Saskatchewan and Ontario co-operative insurers whose roots run back to the Co-operative Life Insurance Company founded in Regina in 1945. It is owned by Canadian co-operatives, credit union centrals and farm organizations rather than public shareholders, and writes multi-line property and casualty, home, auto, farm, travel and life insurance alongside group benefits, group retirement and savings, wealth management and institutional asset management — more than $62 billion in assets under administration, nearly 7,000 employees and more than 2,800 licensed insurance representatives across Canada.
+The Co-operators is a Canadian insurance and financial services co-operative, formed in 1978 from the amalgamation of the Saskatchewan and Ontario co-operative insurers whose roots run back to the Co-operative Life Insurance Company founded in Regina in 1945. It is owned by Canadian co-operatives, credit union centrals and farm organizations rather than public shareholders, and writes multi-line property and casualty, home, auto, farm, travel and life insurance alongside group benefits, group retirement and savings, wealth management and institutional asset management, reporting more than $62 billion in assets under administration, nearly 7,000 employees and more than 2,800 licensed insurance representatives across Canada. Its API posture is partner-gated. There is no first-party developer portal on cooperators.ca — developer, developers, docs, api and partners subdomains do not resolve in DNS, and /developers, /developer, /api, /partners and /integrations all return HTTP 404 — while the advisor and broker channel is a set of sign-in walls (lifeportal.cooperators.ca, benefitsnowlogon.cooperators.ca, basis.cooperators.ca, illustration.cumis.com). The only public API surface in the group belongs to its embedded-insurance brand Duuo, whose Duuo Platform partner APIs cover account, quote, payment and policy issuance for tenant and event insurance behind a signed partnership agreement and issued OAuth 2.0 client credentials; the developer portal Duuo advertises at developer.duuo.ca is a Postman-hosted documentation domain that returns HTTP 404 as of 2026-07-25. No ACORD, AL3 or CSIO reference was found anywhere in the company's public materials.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/cooperators/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/cooperators/refs/heads/main/apis.yml)
+**Areas:** Insurance · Canada · Property and Casualty · Life Insurance · Group Benefits · Embedded Insurance · Cooperative · Wealth Management · Partner API
 
-## API Posture
+## The Co-operators on APIs.io
 
-There is no first-party developer portal. Every candidate developer subdomain on `cooperators.ca` — `developer`, `developers`, `docs`, `api`, `apis`, `partners` — fails to resolve in DNS, and `/developers`, `/developer`, `/api`, `/partners` and `/integrations` all return HTTP 404. The advisor and broker channel is a set of sign-in walls (`lifeportal.cooperators.ca`, `benefitsnowlogon.cooperators.ca`, `basis.cooperators.ca`, `illustration.cumis.com`), and that sign-in page names no API, no developer documentation and no data-exchange standard.
+Everything profiled for The Co-operators is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cooperators/](https://apis.io/providers/cooperators/)** — or go straight to one of the APIs or properties below.
 
-The only API surface in the group belongs to **Duuo**, the embedded insurance brand owned by The Co-operators. Duuo's partner APIs cover account, quote, payment and policy issuance for tenant and event insurance, but access is not self-serve: partners engage the partnerships team, sign a partnership agreement, are assigned a Partner Account Manager, and are then issued OAuth 2.0 client credentials and a partner-specific host. The developer portal Duuo still advertises at `https://developer.duuo.ca/` is a Postman-hosted documentation domain that returns **HTTP 404** as of 2026-07-25 — the collection it published has been unpublished, and no live public API reference remains.
+### APIs (2)
 
-**ACORD posture:** no ACORD reference found. Searches across Co-operators and Duuo public material for ACORD, AL3, ACORD XML, NGDS, IVANS and CSIO returned zero matches, and The Co-operators does not appear in the public [CSIO member directory](https://csio.com/membership/member-directory) — CSIO being Canada's P&C data-standards body and the domestic counterpart to ACORD.
+- [The Co-operators Event Insurance API](https://apis.io/apis/cooperators/cooperators-event-insurance-api/) — Quote and bind Duuo event insurance. Ordered flow — create entity, create quote, get quote, make payment. With bindOnPayment=true (the default for API…
+- [The Co-operators Tenant Insurance API](https://apis.io/apis/cooperators/cooperators-tenant-insurance-api/) — Quote and bind Duuo tenant (renters) insurance. Ordered flow — check eligibility, update quote, add insured, make payment. Duuo notes that Get Quote Status…
 
-**Quote / bind / issue / FNOL:** quote and bind/issue are covered, partner-only, for Duuo tenant and event insurance. No claims or FNOL API is published anywhere in the group.
+### Published properties
 
-No OpenAPI, Swagger, AsyncAPI, GraphQL, gRPC or live public Postman artifact is published, so this repo has no `openapi/` directory.
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Tags
+#### Arazzo workflows (2)
 
-- Insurance
-- Canada
-- Property and Casualty
-- Life Insurance
-- Group Benefits
-- Embedded Insurance
-- Co-operative
-- Wealth Management
-- Partner API
+Multi-step workflows that chain operations into a business task.
 
-## Timestamps
+- [Duuo event insurance — quote and bind](https://apis.io/arazzos/cooperators/cooperators-event-insurance-quote-and-bind/)
+- [Duuo tenant insurance — quote and bind](https://apis.io/arazzos/cooperators/cooperators-tenant-insurance-quote-and-bind/)
 
-- **Created:** 2026-07-25
-- **Modified:** 2026-07-25
+#### MCP servers (1)
 
-## APIs
+Model Context Protocol servers that expose the API to agents.
 
-### Duuo Platform API
+- [duuo-platform](https://apis.io/servers/cooperators/duuo-platform/)
 
-Partner-gated embedded insurance API from Duuo, the digital insurance brand of The Co-operators, covering account, quote and policy, risk rating and payment so partners can embed tenant and event insurance into their own applications. Authentication is OAuth 2.0 `client_credentials` against a partner-issued token URL.
+#### Agentic access (1)
 
-- **Human URL:** [https://duuo.ca/embedded-partners/](https://duuo.ca/embedded-partners/)
-- **Base URL:** not published (partner-issued host)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Cooperators Agentic Access](https://apis.io/agentic-access/cooperators/cooperators-agentic-access/)
 
-- Embedded Insurance
-- Quote
-- Policy
-- Tenant Insurance
-- Event Insurance
-- Partner API
+#### Collections (1)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://duuo.ca/embedded-partners/)
-- [Website](https://duuo.ca/)
-- [Sign Up](https://duuo.ca/new-partners/)
+- [Duuo Platform API](https://apis.io/collections/cooperators/open-cooperators-duuo-platform/)
 
-## Common Properties
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Cooperators Duuo Platform Overlay](https://apis.io/overlays/cooperators/cooperators-duuo-platform-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Cooperators Authentication](https://apis.io/security/cooperators/cooperators-authentication/)
+- [Cooperators Domain Security](https://apis.io/security/cooperators/cooperators-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.cooperators.ca/)
-- [About](https://www.cooperators.ca/en/about-us/corporate-overview)
-- [Sign In](https://www.cooperators.ca/en/advisors/sign-in)
-- [Investor Relations](https://www.cooperators.ca/en/about-us/corporate-overview/investor-relations)
-- [Security and Privacy](https://www.cooperators.ca/en/security-privacy)
-- [LinkedIn](https://www.linkedin.com/company/co-operators)
+- [Support](https://www.cooperators.ca/en/contact-us)
+- [Blog](https://duuo.ca/blog/)
+- [Terms of service](https://www.cooperators.ca/en/security-privacy/legal)
+- [Privacy policy](https://www.cooperators.ca/en/security-privacy/privacy-policy)
 
-## Review
+## API Evangelist rating
 
-See [review.yml](review.yml) for the full API Evangelist reviewer findings — every probed URL with its HTTP status, the ACORD/CSIO search result, the auth model, and the archived record of the now-unpublished Duuo developer portal.
+**Kin Score 28.3** — thin · rubric 0.24.0 · scored 2026-10-17
 
-## Maintainers
+| Facet | Score |
+|---|---|
+| Discoverability | 65.2 |
+| Contract quality | 13.9 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 49.4 |
+| Access clarity | 34.2 |
 
-- Kin Lane — kin@apievangelist.com
+**Agent readiness 29.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 28.1** — Insurance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cooperators/](https://apis.io/providers/cooperators/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for The Co-operators: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cooperators/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
